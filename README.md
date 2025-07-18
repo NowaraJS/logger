@@ -1,151 +1,292 @@
-# Prepare your package :
+# 📦 Logger
 
-## 1. Add in your repository environment variables and deploy keys:
+![komi-logger-wall](https://github.com/user-attachments/assets/8ed0c4fa-f41a-4d86-bbba-d7a3aa49db47)
 
-### 1.1 Prerequisites
+## 📌 Table of contents
 
-#### 1.1.1 SSH
-Generated SSH key with `ssh-keygen -t ed25519 -C "your_mail@domain.ext" -f your_package_name`
-
-- Get the public key with:
-	```bash
-	cat your_package_name.pub
-	```
-	You will get an output like this:
-	```
-	ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC ...
-	```
-
-- Get the private key with:
-	```bash
-	cat your_package_name
-	```
-	You will get an output like this:
-	```
-	-----BEGIN OPENSSH PRIVATE KEY-----
-	...
-	-----END OPENSSH PRIVATE KEY-----
-	```
-
-#### 1.1.2 GPG **(You can reuse your existing GPG key if you have one for you account)**
-
-- Generate a GPG key with `gpg --full-generate-key` and follow the prompts to create a key suitable for signing commits and tags **whithout passphrase**.
-
-- Get the public key with:
-	```bash
-		gpg --armor --export your_email@domain.ext
-	```
-	
-	You will get an output like this:
-	```
-	-----BEGIN PGP PUBLIC KEY BLOCK-----
-	...
-	-----END PGP PUBLIC KEY BLOCK-----
-	```
-	And then copy the output and put in yourh github account settings -> SSH and GPG keys -> New GPG key.
-
-- Get the private key (for github-action) with:
-	```bash
-	gpg --armor --export-secret-keys your_email@domain.ext
-	```
-	You will get an output like this:
-	```
-	-----BEGIN PGP PRIVATE KEY BLOCK-----
-	...
-	-----END PGP PRIVATE KEY BLOCK-----
-	```
-
-### 1.2 Deploy keys
-Create a deploy key in your repository example `SSH_KEY` and put the public key generated in step [1.1.1](#111-ssh).
-
-### 1.3 Environment variables
-
-All environment variables are used in the workflow!
-
-Add the following environment variables to your repository settings:
-
-- `KEY_SSH`: The private SSH key for accessing the repository. (Generated in step [1.1.1](#111-ssh))
-- `KEY_GPG`: The GPG private key for signing commits and tags for git (Generated in step [1.1.2](#112-gpg))
-- `GIT_EMAIL`: Your email address associated with the GPG key.
-- `NPM_TOKEN`: Your npm token for publishing packages.
-
-## 2 Configure your repository
-- Add Ruleset for `main` and `develop` branches.
-- Add tag `need-triage` for issues.
-- Add your settings..
-
-## 3 Configure your package.json
-Update :
-- `name`: The name of your package, e.g., `@your-scope/your-package-name` or `your-package-name`.
-- `version`: Reset to `1.0.0`. or the version you want to start with.
-- `description`: A brief description of your package.
-- `keywords`: Add relevant keywords to help others find your package. (e.g., `["bun", "package-template"]`)
-- `exports`: Define the entry points for your package. For example:
-	```json
-	"exports": {
-		".": "./dist/index.js",
-		"./types": "./dist/types/index.js"
-	}
-	```
-
-## 4 Configure your builder
-Just change `entrypoints` in `builder.ts` to your entry point file. (e.g., `source/index.ts`).
-
-## 5 Update README.md
-Update the README.md file with relevant information about your package.
-
----
----
-<!-- You Can Remove all content above this line -->
-
-# 📦 Package Template
-
-## 📌 Table of Contents
-
-- [📦 Package Template](#-package-template)
-	- [📌 Table of Contents](#-table-of-contents)
-	- [📝 Description](#-description)
-	- [🌟 Documentation](#-documentation)
-	- [🔧 Installation](#-installation)
-	- [⚙️ Usage](#-usage)
-	- [⚖️ License](#-license)
-	- [📧 Contact](#-contact)
+- [📦 Logger](#-logger)
+    - [📌 Table of contents](#-table-of-contents)
+    - [📝 Description](#-description)
+        - [✨ Key Features](#-key-features)
+        - [🏗️ Architecture](#-architecture)
+    - [🚀 Usage](#-usage)
+        - [Basic Setup](#basic-setup)
+        - [Multiple Strategies](#multiple-strategies)
+        - [Custom Strategies with Advanced Type Safety](#custom-strategies-with-advanced-type-safety)
+            - [Typed Strategy Implementation](#typed-strategy-implementation)
+            - [Body Intersection with Multiple Strategies](#body-intersection-with-multiple-strategies)
+            - [Mixed Strategy Types](#mixed-strategy-types)
+        - [Error Handling](#error-handling)
+        - [Strategy Management](#strategy-management)
+        - [Available Log Levels](#available-log-levels)
+        - [Configuration Options](#configuration-options)
+    - [🌟 Documentation](#-documentation)
+    - [⚖️ License](#-license)
+    - [📧 Contact](#-contact)
 
 ## 📝 Description
 
-> Template for creating new npm packages with Bun.
+**@nowarajs/logger** is a modular, type-safe, and strategy-based logging library designed specifically for Bun. It provides a flexible and high-performance logging system with the following key features:
 
-**Package Template** provides a starting point for building and publishing npm packages. Customize this section with a description of your package's purpose and features.
+### ✨ Key Features
+
+- **🔄 Non-blocking Architecture**: Uses transform streams and async processing for optimal performance
+- **🎯 Strategy Pattern**: Multiple logging strategies (console, file, custom) that can be used individually or combined
+- **🛡️ Type Safety**: Full TypeScript support with strict typing for better development experience
+- **⚡ High Performance**: Queue-based system with configurable buffer limits (default: 10,000 logs)
+- **🎨 Flexible Logging Levels**: Support for ERROR, WARN, INFO, DEBUG, and LOG levels
+- **🔗 Event-Driven**: Emits typed events for error handling and lifecycle management
+- **🔧 Immutable API**: Each operation returns a new logger instance for better state management
+- **📦 Built-in Strategies**: Console logger with colorization and file logger included
+- **🛠️ Custom Strategy Support**: Easily create and register custom logging strategies with advanced type safety
+- **📜 Body Intersection**: Automatically infers and enforces correct types based on selected strategies using TypeScript's body intersection feature
+
+### 🏗️ Architecture
+
+The logger uses a transform stream to process log entries asynchronously. Each log is queued and processed through the configured strategies. The system handles backpressure automatically and provides error isolation between strategies.
+
+## 🚀 Usage
+
+### Basic Setup
+
+```typescript
+import { Logger } from '@nowarajs/logger';
+import { ConsoleLoggerStrategy, FileLoggerStrategy } from '@nowarajs/logger/strategies';
+
+// Create a logger with console strategy
+const logger = new Logger()
+    .registerStrategy('console', new ConsoleLoggerStrategy(true)); // with colors
+
+// Log messages
+logger.info('Application started successfully');
+logger.error('An error occurred');
+logger.debug('Debug information', ['console']); // specific strategy
+```
+
+### Multiple Strategies
+
+```typescript
+// Combine multiple strategies
+const logger = new Logger()
+    .registerStrategy('console', new ConsoleLoggerStrategy(true))
+    .registerStrategy('file', new FileLoggerStrategy('./app.log'));
+
+// Logs to both console and file
+logger.info('This goes to both strategies');
+
+// Log to specific strategies only
+logger.error('Critical error', ['file']); // only to file
+logger.warn('Warning message', ['console']); // only to console
+```
+
+### Custom Strategies with Advanced Type Safety
+
+The most powerful feature of @nowarajs/logger is its **advanced type safety system**. You can create custom logging strategies with typed objects, and TypeScript will automatically infer and enforce the correct types based on your selected strategies through **body intersection**.
+
+#### Typed Strategy Implementation
+
+When you implement `LoggerStrategy<TLogObject>`, you specify the exact type of object that strategy expects:
+
+```typescript
+import { Logger } from '@nowarajs/logger';
+import type { LoggerStrategy, LogLevels } from '@nowarajs/logger/types';
+
+// Define specific interfaces for different logging contexts
+interface DatabaseLog {
+    userId: number;
+    action: string;
+    metadata?: Record<string, unknown>;
+}
+
+interface ApiLog {
+    endpoint: string;
+    method: string;
+    statusCode: number;
+    responseTime: number;
+}
+
+// Create typed strategies
+class DatabaseLoggerStrategy implements LoggerStrategy<DatabaseLog> {
+    public async log(level: LogLevels, date: Date, object: DatabaseLog): Promise<void> {
+        // object is strictly typed as DatabaseLog
+        await saveToDatabase({ 
+            level, 
+            date, 
+            userId: object.userId,
+            action: object.action,
+            metadata: object.metadata 
+        });
+    }
+}
+
+
+// You can just put the type directly in the log method and it will be automatically inferred
+class ApiLoggerStrategy implements LoggerStrategy {
+    public async log(level: LogLevels, date: Date, object: ApiLog): Promise<void> {
+        // object is strictly typed as ApiLog
+        await sendToMonitoring(`${object.method} ${object.endpoint} - ${object.statusCode} (${object.responseTime}ms)`);
+    }
+}
+
+// Register typed strategies
+const logger = new Logger()
+    .registerStrategy('database', new DatabaseLoggerStrategy())
+    .registerStrategy('api', new ApiLoggerStrategy())
+    .registerStrategy('console', new ConsoleLoggerStrategy()); // ConsoleLoggerStrategy<unknown>
+
+// ✅ TypeScript enforces the correct types based on selected strategies
+logger.info({ 
+    userId: 123, 
+    action: 'login',
+    metadata: { ip: '192.168.1.1' } 
+}, ['database']); // Only DatabaseLog type required
+
+logger.error({
+    endpoint: '/api/users',
+    method: 'POST',
+    statusCode: 500,
+    responseTime: 1250
+}, ['api']); // Only ApiLog type required
+
+// ❌ TypeScript error: Missing required properties
+logger.info({
+    userId: 123,
+    action: 'login'
+    // Error: object doesn't match ApiLog interface
+}, ['api']);
+```
+
+#### Body Intersection with Multiple Strategies
+
+When using multiple strategies simultaneously, @nowarajs/logger creates a **type intersection** of all selected strategy types using the `BodiesIntersection` utility type:
+
+```typescript
+// ✅ TypeScript requires intersection of both types when using multiple strategies
+logger.warn({
+    userId: 123,
+    action: 'failed_request',
+    endpoint: '/api/users',
+    method: 'POST', 
+    statusCode: 400,
+    responseTime: 200
+}, ['database', 'api']); // Both DatabaseLog & ApiLog types required
+
+// ❌ TypeScript error: Missing ApiLog properties
+logger.error({
+    userId: 123,
+    action: 'error'
+    // Error: Missing endpoint, method, statusCode, responseTime
+}, ['database', 'api']);
+
+// ✅ When no strategies specified, uses all strategies (intersection of all types)
+logger.log({
+    userId: 123,
+    action: 'system_event',
+    endpoint: '/health',
+    method: 'GET',
+    statusCode: 200,
+    responseTime: 50
+}); // DatabaseLog & ApiLog & unknown (console) intersection required
+```
+
+#### Mixed Strategy Types
+
+You can mix typed and untyped strategies. The intersection will include `unknown` for untyped strategies:
+
+```typescript
+// Using typed + untyped strategies  
+logger.info({
+    userId: 123,
+    action: 'mixed_log',
+    additionalData: 'any value' // ✅ Allowed due to intersection with unknown
+}, ['database', 'console']); // Type: DatabaseLog & unknown
+
+// TypeScript allows additional properties when unknown is in the intersection
+logger.debug({
+    userId: 123,
+    action: 'debug_info',
+    debugLevel: 3,
+    stackTrace: ['frame1', 'frame2'],
+    customField: { nested: 'data' }
+}, ['database', 'console']); // ✅ Extra properties allowed due to unknown intersection
+```
+
+### Error Handling
+
+```typescript
+const logger = new Logger()
+    .registerStrategy('console', new ConsoleLoggerStrategy());
+
+// Listen for errors
+logger.on('error', (error) => {
+    console.error('Logger error:', error);
+});
+
+// Listen for completion
+logger.on('end', () => {
+    console.log('All pending logs processed');
+});
+```
+
+### Strategy Management
+
+```typescript
+let logger = new Logger();
+
+// Add strategies
+logger = logger
+    .registerStrategy('console', new ConsoleLoggerStrategy())
+    .registerStrategy('file', new FileLoggerStrategy('./app.log'));
+
+// Add multiple strategies at once
+logger = logger.registerStrategies([
+    ['database', new DatabaseLoggerStrategy()],
+    ['remote', new RemoteLoggerStrategy()]
+]);
+
+// Remove strategies
+logger = logger.unregisterStrategy('database');
+logger = logger.unregisterStrategies(['file', 'remote']);
+
+// Clear all strategies
+logger = logger.clearStrategies();
+```
+
+### Available Log Levels
+
+```typescript
+logger.error('Error message');   // ERROR level
+logger.warn('Warning message');  // WARN level  
+logger.info('Info message');     // INFO level
+logger.debug('Debug message');   // DEBUG level
+logger.log('Generic message');   // LOG level
+```
+
+### Configuration Options
+
+```typescript
+// Custom queue size (default: 10,000)
+const logger = new Logger({}, 5000);
+
+// With initial strategies
+const logger = new Logger({
+    console: new ConsoleLoggerStrategy(true),
+    file: new FileLoggerStrategy('./app.log')
+});
+```
 
 ## 🌟 Documentation
 
-- [References](https://your-package-docs.com)  
-	*(Update this link to your package documentation if needed.)*
+- [Reference Documentation](https://nowarajs.github.io/logger)
 
-## 🔧 Installation
-
-```bash
-bun add @your-scope/your-package-name
-```
-Replace `@your-scope/your-package-name` with your actual package name.
-
-## ⚙️ Usage
-
-```ts
-import { YourExportedFunction } from '@your-scope/your-package-name'
-
-// Example usage
-YourExportedFunction()
-```
-Update this section with usage examples relevant to your package.
 
 ## ⚖️ License
 
-Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
+Distributed under the MIT License. See LICENSE for more information.
 
 ## 📧 Contact
 
-Mail - [your-email@domain.com](mailto:your-email@domain.com)
+Mail - [komiriko@pm.me](komiriko@pm.me)
 
-[Project link](https://github.com/your-username/your-repo)
+[Project link](https://github.com/NowaraJS/logger)
 
