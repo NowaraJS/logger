@@ -24,9 +24,11 @@ await Bun.build({
 		'./source/error/index.ts',
 		'./source/error/types/index.ts',
 
-		// # ————————— Utils ————————— #
-		'./source/utils/index.ts',
-		'./source/utils/enums/index.ts',
+		// # ————————— Strategies ————————— #
+		'./source/strategies/index.ts',
+
+		// # ————————— Types ————————— #
+		'./source/types/index.ts',
 
 		// # ————————— Root ————————— #
 		'./source/index.ts'

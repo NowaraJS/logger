@@ -1,1 +1,1 @@
-export type * from './pkgErrorOptions';
+export type { LoggerErrorOptions } from './loggerErrorOptions';

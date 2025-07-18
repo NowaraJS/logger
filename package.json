@@ -1,12 +1,19 @@
 {
-	"name": "template-package-npm",
+	"name": "@nowarajs/logger",
 	"version": "1.0.0",
-	"author": "Komiriko",
-	"description": "A template to create a bun package.",
+	"author": "NowaraJS",
+	"description": "High-performance, type-safe logging library for Bun with advanced TypeScript body intersection, modular strategy pattern, transform streams, and immutable API design.",
 	"type": "module",
 	"license": "MIT",
 	"keywords": [
-		"pkg"
+		"logging",
+		"bun",
+		"typescript",
+		"logger",
+		"type-safe",
+		"modular",
+		"strategy",
+		"strategy-pattern"
 	],
 	"scripts": {
 		"build": "bun builder.ts",
@@ -30,8 +37,8 @@
 	"exports": {
 		"./error": "./dist/error/index.js",
 		"./error/types": "./dist/error/types/index.js",
-		"./utils": "./dist/utils/index.js",
-		"./utils/enums": "./dist/utils/enums/index.js",
+		"./strategies": "./dist/strategies/index.js",
+		"./types": "./dist/types/index.js",
 		".": "./dist/index.js"
 	},
 	"changelog": {

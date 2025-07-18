@@ -1,1 +1,1 @@
-export * from './pkgError';
+export { LoggerError } from './loggerError';
