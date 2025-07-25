@@ -282,11 +282,10 @@ const logger = new Logger({
 
 ## ⚖️ License
 
-Distributed under the MIT License. See LICENSE for more information.
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
 
 ## 📧 Contact
 
-Mail - [komiriko@pm.me](komiriko@pm.me)
-
-[Project link](https://github.com/NowaraJS/logger)
+- GitHub: [NowaraJS](https://github.com/NowaraJS)
+- Package: [@nowarajs/logger](https://www.npmjs.com/package/@nowarajs/logger)
 
