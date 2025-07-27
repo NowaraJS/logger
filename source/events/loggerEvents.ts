@@ -1,7 +1,7 @@
-import type { LoggerError } from '#/error/loggerError';
+import type { BaseError } from '@nowarajs/error';
 
 export interface LoggerEvent {
-	error: [LoggerError<{
+	error: [BaseError<{
 		strategyName: string;
 		object: unknown;
 		error: Error;
