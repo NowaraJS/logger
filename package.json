@@ -95,9 +95,9 @@
 		}
 	},
 	"peerDependencies": {
-		"@nowarajs/error": "^1.1.1"
+		"@nowarajs/error": "^1.1.2"
 	},
 	"dependencies": {
-		"@nowarajs/typed-event-emitter": "^1.1.9"
+		"@nowarajs/typed-event-emitter": "^1.1.10"
 	}
 }
