@@ -1,4 +1,4 @@
-# 📦 Logger
+# 📦 NowaraJS - Logger
 
 ![komi-logger-wall](https://github.com/user-attachments/assets/8ed0c4fa-f41a-4d86-bbba-d7a3aa49db47)
 
