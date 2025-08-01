@@ -1,6 +1,6 @@
 {
 	"name": "@nowarajs/logger",
-	"version": "1.1.2",
+	"version": "1.1.3",
 	"author": "NowaraJS",
 	"description": "Type-safe logging library for Bun with advanced TypeScript body intersection, modular strategy pattern, transform streams, and immutable API design.",
 	"type": "module",
