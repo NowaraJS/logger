@@ -3,7 +3,7 @@
 import { BaseError } from '@nowarajs/error';
 import { describe, expect, test } from 'bun:test';
 
-import { loggerErrorKeys } from '#/enums/loggerErrorKeys';
+import { LOGGER_ERROR_KEYS } from '#/enums/loggerErrorKeys';
 import { Logger } from '#/logger';
 import type { LoggerStrategy } from '#/types/loggerStrategy';
 import type { LogLevels } from '#/types/logLevels';
@@ -36,7 +36,7 @@ describe('Logger', () => {
 			const logger: Logger = new Logger();
 			const strategy: LoggerStrategy = { log: () => {} };
 			const logger2 = logger.registerStrategy('test', strategy);
-			expect(() => logger2.registerStrategy('test', strategy)).toThrow(loggerErrorKeys.strategyAlreadyAdded);
+			expect(() => logger2.registerStrategy('test', strategy)).toThrow(LOGGER_ERROR_KEYS.STRATEGY_ALREADY_ADDED);
 		});
 	});
 
@@ -53,7 +53,7 @@ describe('Logger', () => {
 		test('should throw an error if the strategy is not found', () => {
 			const logger: Logger = new Logger();
 			// Type is never, so we must cast
-			expect(() => (logger as unknown as { unregisterStrategy: (name: string) => void }).unregisterStrategy('test')).toThrow(loggerErrorKeys.strategyNotFound);
+			expect(() => (logger as unknown as { unregisterStrategy: (name: string) => void }).unregisterStrategy('test')).toThrow(LOGGER_ERROR_KEYS.STRATEGY_NOT_FOUND);
 		});
 	});
 
@@ -77,7 +77,7 @@ describe('Logger', () => {
 				['test2', { log: () => {} }]
 			];
 			const logger2 = logger.registerStrategies(strategies);
-			expect(() => logger2.registerStrategies(strategies)).toThrow(loggerErrorKeys.strategyAlreadyAdded);
+			expect(() => logger2.registerStrategies(strategies)).toThrow(LOGGER_ERROR_KEYS.STRATEGY_ALREADY_ADDED);
 		});
 	});
 
@@ -101,7 +101,7 @@ describe('Logger', () => {
 				['test2', { log: () => {} }]
 			];
 			const logger2 = logger.registerStrategies(strategies);
-			expect(() => (logger2 as unknown as { unregisterStrategies: (names: string[]) => Logger }).unregisterStrategies(['test1', 'test3'])).toThrow(loggerErrorKeys.strategyNotFound);
+			expect(() => (logger2 as unknown as { unregisterStrategies: (names: string[]) => Logger }).unregisterStrategies(['test1', 'test3'])).toThrow(LOGGER_ERROR_KEYS.STRATEGY_NOT_FOUND);
 		});
 	});
 
@@ -144,7 +144,7 @@ describe('Logger', () => {
 			['log']
 		])('should throw if no strategy is added (method: %s)', (method: string) => {
 			const logger = new Logger();
-			expect(() => ((logger as unknown) as Record<string, (object: unknown) => void>)[method]('test')).toThrow(loggerErrorKeys.noStrategyAdded);
+			expect(() => ((logger as unknown) as Record<string, (object: unknown) => void>)[method]('test')).toThrow(LOGGER_ERROR_KEYS.NO_STRATEGY_ADDED);
 		});
 	});
 
