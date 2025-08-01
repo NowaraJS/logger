@@ -33,11 +33,9 @@
 		"eslint": "^9.32.0",
 		"globals": "^16.3.0",
 		"typescript-eslint": "^8.38.0",
-		"typescript": "^5.8.3"
+		"typescript": "^5.9.2"
 	},
 	"exports": {
-		"./enums": "./dist/enums/index.js",
-		"./events": "./dist/events/index.js",
 		"./strategies": "./dist/strategies/index.js",
 		"./types": "./dist/types/index.js",
 		".": "./dist/index.js"
@@ -95,9 +93,9 @@
 		}
 	},
 	"peerDependencies": {
-		"@nowarajs/error": "^1.1.2"
+		"@nowarajs/error": "^1.1.4"
 	},
 	"dependencies": {
-		"@nowarajs/typed-event-emitter": "^1.1.10"
+		"@nowarajs/typed-event-emitter": "^1.1.11"
 	}
 }
