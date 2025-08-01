@@ -20,12 +20,6 @@ await Bun.build({
 	],
 	root: './source',
 	entrypoints: [
-		// # ————————— Enums ————————— #
-		'./source/enums/index.ts',
-
-		// # ————————— Events ————————— #
-		'./source/events/index.ts',
-
 		// # ————————— Strategies ————————— #
 		'./source/strategies/index.ts',
 
