@@ -1,4 +1,5 @@
-name: Integration Test
+name: job-integration-test
+run-name: "[job-integration-test] ${{ inputs.branch }}"
 
 on:
   workflow_call:
@@ -12,10 +13,19 @@ on:
         required: true
 
 jobs:
-  integration-test:
-    name: Check integration tests
+  run-integration-tests:
+    name: Integration Tests
     runs-on: ubuntu-latest
     steps:
+      - name: Verify required secrets
+        run: |
+          echo "🔍 Verifying required secrets for integration test job..."
+          if [ -z "${{ secrets.KEY_SSH }}" ]; then
+            echo "❌ KEY_SSH secret is missing"
+            exit 1
+          fi
+          echo "✅ All required secrets are present"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -26,7 +36,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.2.15
 
       - name: Install Dependencies
         run: bun install
