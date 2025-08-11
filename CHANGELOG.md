@@ -1,4 +1,20 @@
 
+## v1.1.4
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.3...v1.1.4)
+
+### 📦 Build
+
+- **📦:** [Update devDependencies and peerDependencies versions] ([655832a](https://github.com/NowaraJS/logger/commit/655832a))
+
+### 🤖 CI
+
+- **🤖:** [Add GitHub Actions workflows for CI/CD processes] ## CI Changes - Introduced multiple GitHub Actions workflows for building, testing, and deploying the project. - Added workflows for linting, unit testing, integration testing, and publishing to NPM. - Implemented a rebase workflow to manage branch updates. - Enhanced the main CI workflow to include all new jobs and manage dependencies between them. ([debbd05](https://github.com/NowaraJS/logger/commit/debbd05))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.3
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.2...v1.1.3)
