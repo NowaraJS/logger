@@ -32,7 +32,7 @@
 		"@types/bun": "^1.2.20",
 		"eslint": "^9.33.0",
 		"globals": "^16.3.0",
-		"typescript-eslint": "^8.39.0",
+		"typescript-eslint": "^8.39.1",
 		"typescript": "^5.9.2"
 	},
 	"exports": {
@@ -93,9 +93,9 @@
 		}
 	},
 	"peerDependencies": {
-		"@nowarajs/error": "^1.1.5"
+		"@nowarajs/error": "^1.1.6"
 	},
 	"dependencies": {
-		"@nowarajs/typed-event-emitter": "^1.1.12"
+		"@nowarajs/typed-event-emitter": "^1.1.13"
 	}
 }
