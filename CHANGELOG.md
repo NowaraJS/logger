@@ -1,4 +1,20 @@
 
+## v1.1.5
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.4...v1.1.5)
+
+### 📖 Documentation
+
+- **📖:** [Update copilot instructions for development workflow] ([79fefe5](https://github.com/NowaraJS/logger/commit/79fefe5))
+
+### 📦 Build
+
+- **📦:** [Update devDependencies and peerDependencies versions] ([057a836](https://github.com/NowaraJS/logger/commit/057a836))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.4
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.3...v1.1.4)
