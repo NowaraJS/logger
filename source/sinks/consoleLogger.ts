@@ -1,14 +1,14 @@
-import type { LoggerStrategy } from '#/types/loggerStrategy';
+import type { LoggerSink } from '#/types/loggerSink';
 import type { LogLevels } from '#/types/logLevels';
 
 /**
-* ConsoleLoggerStrategy implements LoggerStrategy to provide logging functionality to the console. ({@link LoggerStrategy})
+* ConsoleLoggerSink implements LoggerSink to provide logging functionality to the console.
 */
-export class ConsoleLoggerStrategy implements LoggerStrategy {
+export class ConsoleLoggerSink implements LoggerSink {
 	private readonly _colorize: boolean;
 
 	/**
-	* Initializes the ConsoleLoggerStrategy.
+	* Initializes the ConsoleLoggerSink.
 	*
 	* @param colorize - Indicates if the output should be colorized. (Default is false.)
 	*/
@@ -19,7 +19,7 @@ export class ConsoleLoggerStrategy implements LoggerStrategy {
 	/**
 	* Logs a message to the console with the specified log level.
 	*
-	* @param level - The log level at which the message should be logged. ({@link LogLevels})
+	* @param level - The log level at which the message should be logged.
 	* @param date - The date at which the message was logged.
 	* @param object - The object to log.
 	*/
