@@ -2,7 +2,7 @@
 	"name": "@nowarajs/logger",
 	"version": "1.1.5",
 	"author": "NowaraJS",
-	"description": "Type-safe logging library for Bun with advanced TypeScript body intersection, modular strategy pattern, transform streams, and immutable API design.",
+	"description": "Type-safe logging library for Bun with advanced TypeScript body intersection, modular sink pattern, transform streams, and immutable API design.",
 	"type": "module",
 	"license": "MIT",
 	"keywords": [
@@ -13,8 +13,8 @@
 		"logger",
 		"type-safe",
 		"modular",
-		"strategy",
-		"strategy-pattern"
+		"sink",
+		"sink-pattern"
 	],
 	"scripts": {
 		"build": "bun builder.ts",
@@ -32,11 +32,12 @@
 		"@types/bun": "^1.2.20",
 		"eslint": "^9.33.0",
 		"globals": "^16.3.0",
-		"typescript-eslint": "^8.39.1",
+		"typescript-eslint": "^8.40.0",
 		"typescript": "^5.9.2"
 	},
 	"exports": {
-		"./strategies": "./dist/strategies/index.js",
+		"./enums": "./dist/enums/index.js",
+		"./sinks": "./dist/sinks/index.js",
 		"./types": "./dist/types/index.js",
 		".": "./dist/index.js"
 	},

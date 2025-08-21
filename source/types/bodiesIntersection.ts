@@ -1,8 +1,8 @@
-import type { StrategyBody } from './strategyBody';
+import type { SinkBody } from './sinkBody';
 
-export type BodiesIntersection<TStrategies, K extends keyof TStrategies>
+export type BodiesIntersection<TSinks, K extends keyof TSinks>
 = (
 	K extends unknown
-		? (object: StrategyBody<TStrategies, K>) => void
+		? (object: SinkBody<TSinks, K>) => void
 		: never
 ) extends (object: infer I) => void ? I : never;

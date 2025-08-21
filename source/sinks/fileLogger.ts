@@ -1,19 +1,19 @@
 import { appendFile } from 'fs/promises';
 
-import type { LoggerStrategy } from '#/types/loggerStrategy';
+import type { LoggerSink } from '#/types/loggerSink';
 import type { LogLevels } from '#/types/logLevels';
 
 /**
-* FileLoggerStrategy implements LoggerStrategy to provide logging functionality to the file system. ({@link LoggerStrategy})
+* FileLoggerSink implements LoggerSink to provide logging functionality to the file system.
 */
-export class FileLoggerStrategy implements LoggerStrategy {
+export class FileLoggerSink implements LoggerSink {
 	/**
 	* Path to the file to log to.
 	*/
 	private readonly _path: string;
 
 	/**
-	* Constructor FileLoggerStrategy
+	* Constructor FileLoggerSink
 	*
 	* @param path - Path to the file to log to.
 	*/
@@ -24,7 +24,7 @@ export class FileLoggerStrategy implements LoggerStrategy {
 	/**
 	* Logs a message to the file system with the specified log level.
 	*
-	* @param level - The log level at which the message should be logged. {@link LogLevels}
+	* @param level - The log level at which the message should be logged.
 	* @param date - The date at which the message was logged.
 	* @param object - The object to log.
 	*/
