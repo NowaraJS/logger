@@ -1,4 +1,16 @@
 
+## v1.1.8
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.7...v1.1.8)
+
+### 📖 Documentation
+
+- **📖:** [Update README for improved structure and clarity] - Reorganized the Table of Contents for better navigation. - Enhanced the Description section to clarify the library's purpose. - Updated Features section to provide clearer descriptions of capabilities. - Added API Reference section for easier access to documentation. ([a88dcae](https://github.com/NowaraJS/logger/commit/a88dcae))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.7
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.6...v1.1.7)
