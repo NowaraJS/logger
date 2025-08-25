@@ -1,4 +1,24 @@
 
+## v1.1.7
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.6...v1.1.7)
+
+### 📖 Documentation
+
+- **📖:** [Add Contributor Covenant Code of Conduct] ([7c78461](https://github.com/NowaraJS/logger/commit/7c78461))
+- **📖:** [Add contributing guidelines to the project] ([a407428](https://github.com/NowaraJS/logger/commit/a407428))
+- **📖:** [Add security policy documentation] ([81ec01a](https://github.com/NowaraJS/logger/commit/81ec01a))
+
+### 🦉 Chore
+
+- **🦉:** [Update contact email in issue template] ([0f37c35](https://github.com/NowaraJS/logger/commit/0f37c35))
+- **🦉:** [rename MIT License file with explicit .md] ([4bcaded](https://github.com/NowaraJS/logger/commit/4bcaded))
+- **🦉:** [Update dependencies and clean up package.json] ([f2168c0](https://github.com/NowaraJS/logger/commit/f2168c0))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.6
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.5...v1.1.6)
