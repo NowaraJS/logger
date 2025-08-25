@@ -7,7 +7,6 @@
 	"license": "MIT",
 	"keywords": [
 		"bun",
-		"node",
 		"nowarajs",
 		"logging",
 		"logger",
@@ -27,10 +26,10 @@
 		"test": "bun test --coverage"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.33.0",
+		"@eslint/js": "^9.34.0",
 		"@stylistic/eslint-plugin": "^5.2.3",
 		"@types/bun": "^1.2.20",
-		"eslint": "^9.33.0",
+		"eslint": "^9.34.0",
 		"globals": "^16.3.0",
 		"typescript-eslint": "^8.40.0",
 		"typescript": "^5.9.2"
@@ -94,9 +93,13 @@
 		}
 	},
 	"peerDependencies": {
-		"@nowarajs/error": "^1.1.6"
+		"@nowarajs/error": "^1.1.7"
 	},
 	"dependencies": {
-		"@nowarajs/typed-event-emitter": "^1.1.13"
+		"@nowarajs/typed-event-emitter": "^1.1.14"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/NowaraJS/logger.git"
 	}
 }
