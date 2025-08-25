@@ -27,12 +27,19 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.34.0",
+		"@nowarajs/error": "^1.1.8",
 		"@stylistic/eslint-plugin": "^5.2.3",
 		"@types/bun": "^1.2.20",
 		"eslint": "^9.34.0",
 		"globals": "^16.3.0",
 		"typescript-eslint": "^8.40.0",
 		"typescript": "^5.9.2"
+	},
+	"peerDependencies": {
+		"@nowarajs/error": "^1.1.8"
+	},
+	"dependencies": {
+		"@nowarajs/typed-event-emitter": "^1.1.14"
 	},
 	"exports": {
 		"./enums": "./dist/enums/index.js",
@@ -91,12 +98,6 @@
 			"tagMessage": "v{{newVersion}}",
 			"tagBody": "v{{newVersion}}"
 		}
-	},
-	"peerDependencies": {
-		"@nowarajs/error": "^1.1.7"
-	},
-	"dependencies": {
-		"@nowarajs/typed-event-emitter": "^1.1.14"
 	},
 	"repository": {
 		"type": "git",
