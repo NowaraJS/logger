@@ -1,49 +1,55 @@
-# 📦 NowaraJS - Logger
+# 🎯 NowaraJS - Logger
 
 ![nowarajs-logger-wall](https://github.com/user-attachments/assets/8ed0c4fa-f41a-4d86-bbba-d7a3aa49db47)
 
-## 📌 Table of contents
+## 📌 Table of Contents
 
-- [📦 Logger](#-logger)
-- [📌 Table of contents](#-table-of-contents)
-- [📝 Description](#-description)
-    - [✨ Key Features](#-key-features)
-    - [🏗️ Architecture](#-architecture)
-- [🚀 Usage](#-usage)
-    - [Basic Setup](#basic-setup)
-    - [Multiple Sinks](#multiple-sinks)
-    - [Custom Sinks with Advanced Type Safety](#custom-sinks-with-advanced-type-safety)
-        - [Typed Sink Implementation](#typed-sink-implementation)
-        - [Body Intersection with Multiple Sinks](#body-intersection-with-multiple-sinks)
-        - [Mixed Sink Types](#mixed-sink-types)
-    - [Error Handling](#error-handling)
-    - [Sink Management](#sink-management)
-    - [Available Log Levels](#available-log-levels)
-    - [Configuration Options](#configuration-options)
-- [🌟 Documentation](#-documentation)
-- [⚖️ License](#-license)
-- [📧 Contact](#-contact)## 📝 Description
+- [🎯 NowaraJS - Logger](#-nowarajs---logger)
+	- [📌 Table of Contents](#-table-of-contents)
+	- [📝 Description](#-description)
+	- [✨ Features](#-features)
+	- [🔧 Installation](#-installation)
+	- [⚙️ Usage](#-usage)
+		- [Basic Setup](#basic-setup)
+		- [Multiple Sinks](#multiple-sinks)
+		- [Custom Sinks with Advanced Type Safety](#custom-sinks-with-advanced-type-safety)
+			- [Typed Sink Implementation](#typed-sink-implementation)
+			- [Body Intersection with Multiple Sinks](#body-intersection-with-multiple-sinks)
+			- [Mixed Sink Types](#mixed-sink-types)
+		- [Error Handling](#error-handling)
+		- [Sink Management](#sink-management)
+		- [Available Log Levels](#available-log-levels)
+		- [Configuration Options](#configuration-options)
+	- [📚 API Reference](#-api-reference)
+	- [⚖️ License](#-license)
+	- [📧 Contact](#-contact)
 
-**@nowarajs/logger** is a modular, type-safe, and sink-based logging library designed specifically for Bun. It provides a flexible and high-performance logging system with the following key features:
+## 📝 Description
 
-### ✨ Key Features
+> A TypeScript library that provides a modular, type-safe, and sink-based logging system designed specifically for Bun.
 
-- **🔄 Non-blocking Architecture**: Uses transform streams and async processing for optimal performance
-- **🎯 Sink Pattern**: Multiple logging sinks (console, file, custom) that can be used individually or combined
-- **🛡️ Type Safety**: Full TypeScript support with strict typing for better development experience
-- **⚡ High Performance**: Queue-based system with configurable buffer limits (default: 10,000 logs)
-- **🎨 Flexible Logging Levels**: Support for ERROR, WARN, INFO, DEBUG, and LOG levels
-- **🔗 Event-Driven**: Emits typed events for error handling and lifecycle management
-- **🔧 Immutable API**: Each operation returns a new logger instance for better state management
-- **📦 Built-in Sinks**: Console logger with colorization and file logger included
-- **🛠️ Custom Sink Support**: Easily create and register custom logging sinks with advanced type safety
-- **📜 Body Intersection**: Automatically infers and enforces correct types based on selected sinks using TypeScript's body intersection feature
+**@nowarajs/logger** provides a flexible and high-performance logging system with advanced TypeScript support. It uses a sink pattern architecture that allows multiple logging destinations (console, file, custom) to be used individually or combined, with automatic type inference and body intersection for type-safe logging operations.
 
-### 🏗️ Architecture
+## ✨ Features
 
-The logger uses a transform stream to process log entries asynchronously. Each log is queued and processed through the configured sinks. The system handles backpressure automatically and provides error isolation between sinks.
+- 🔒 **Type Safety**: Full TypeScript support with advanced body intersection for type-safe logging
+- 🎯 **Sink Pattern**: Multiple logging sinks (console, file, custom) that can be used individually or combined
+- 🔄 **Non-blocking Architecture**: Uses transform streams and async processing for optimal performance
+- ⚡ **High Performance**: Queue-based system with configurable buffer limits (default: 10,000 logs)
+- 🎨 **Flexible Logging Levels**: Support for ERROR, WARN, INFO, DEBUG, and LOG levels
+- 🔗 **Event-Driven**: Emits typed events for error handling and lifecycle management
+- 🔧 **Immutable API**: Each operation returns a new logger instance for better state management
+- 📦 **Built-in Sinks**: Console logger with colorization and file logger included
+- 🛠️ **Custom Sink Support**: Easily create and register custom logging sinks with advanced type safety
+- 📜 **Body Intersection**: Automatically infers and enforces correct types based on selected sinks
 
-## 🚀 Usage
+## 🔧 Installation
+
+```bash
+bun add @nowarajs/logger @nowarajs/error
+```
+
+## ⚙️ Usage
 
 ### Basic Setup
 
@@ -273,7 +279,9 @@ const logger = new Logger({
 });
 ```
 
-## 🌟 Documentation
+## 📚 API Reference
+
+You can find the complete API reference documentation for `@nowarajs/logger` at:
 
 - [Reference Documentation](https://nowarajs.github.io/logger)
 
