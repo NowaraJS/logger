@@ -46,7 +46,13 @@
 ## 🔧 Installation
 
 ```bash
-bun add @nowarajs/logger @nowarajs/error
+bun add @nowarajs/logger
+```
+
+### Peer Dependencies
+#### Required :
+```bash
+bun add @nowarajs/error @nowarajs/typed-event-emitter
 ```
 
 ## ⚙️ Usage
