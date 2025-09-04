@@ -97,10 +97,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		sink: Sink
 	): Logger<TSinks & Record<Key, Sink>> {
 		if ((this._sinks as Record<string, LoggerSink>)[name])
-			throw new BaseError({
-				message: LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED,
-				cause: { sinkName: name }
-			});
+			throw new BaseError(LOGGER_ERROR_KEYS.SINK_ALREADY_ADDED, { sinkName: name });
 		return new Logger({
 			...this._sinks,
 			[name]: sink
@@ -122,10 +119,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		name: Key
 	): Logger<Omit<TSinks, Key>> {
 		if (!(name in this._sinks))
-			throw new BaseError({
-				message: LOGGER_ERROR_KEYS.SINK_NOT_FOUND,
-				cause: { sinkName: name }
-			});
+			throw new BaseError(LOGGER_ERROR_KEYS.SINK_NOT_FOUND, { sinkName: name });
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { [name]: _, ...rest } = this._sinks;
 		return new Logger(rest, this._maxPendingLogs);
@@ -286,10 +280,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 			try {
 				await (this._sinks[name] as LoggerSink<TLogObject> | undefined)?.log(level, date, object);
 			} catch (error) {
-				throw new BaseError({
-					message: LOGGER_ERROR_KEYS.SINK_ERROR,
-					cause: { sinkName: name, object, error }
-				});
+				throw new BaseError(LOGGER_ERROR_KEYS.SINK_ERROR, { sinkName: name, object, error });
 			}
 		}));
 	}
@@ -312,10 +303,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	): void {
 		const sinkKeys = Object.keys(this._sinks) as (keyof TSinks)[];
 		if (sinkKeys.length === 0)
-			throw new BaseError({
-				message: LOGGER_ERROR_KEYS.NO_SINK_ADDED,
-				cause: { level, object }
-			});
+			throw new BaseError(LOGGER_ERROR_KEYS.NO_SINK_ADDED, { level, object });
 		if (this._pendingLogs.length >= this._maxPendingLogs)
 			return;
 		const log: LogStreamChunk<TLogObject, TSinks> = {
