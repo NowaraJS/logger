@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.34.0",
-		"@nowarajs/error": "^1.2.0",
+		"@nowarajs/error": "^1.3.0",
 		"@nowarajs/typed-event-emitter": "^1.1.15",
 		"@stylistic/eslint-plugin": "^5.3.1",
 		"@types/bun": "^1.2.21",
