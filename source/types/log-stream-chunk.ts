@@ -1,5 +1,5 @@
-import type { LogLevels } from './logLevels';
-import type { SinkMap } from './sinkMap';
+import type { LogLevels } from './log-levels';
+import type { SinkMap } from './sink-map';
 
 /**
  * Internal log stream object for the queue.

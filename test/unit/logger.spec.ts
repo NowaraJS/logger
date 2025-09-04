@@ -3,10 +3,10 @@
 import { BaseError } from '@nowarajs/error';
 import { describe, expect, test } from 'bun:test';
 
-import { LOGGER_ERROR_KEYS } from '#/enums/loggerErrorKeys';
+import { LOGGER_ERROR_KEYS } from '#/enums/logger-error-keys';
 import { Logger } from '#/logger';
-import type { LoggerSink } from '#/types/loggerSink';
-import type { LogLevels } from '#/types/logLevels';
+import type { LoggerSink } from '#/types/logger-sink';
+import type { LogLevels } from '#/types/log-levels';
 
 /**
  * Tests for the Logger class (immutable API).
