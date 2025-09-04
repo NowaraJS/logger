@@ -1,4 +1,16 @@
 
+## v1.1.12
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.11...v1.1.12)
+
+### 🧹 Refactors
+
+- **🧹:** [Rename files to kebab-case] ([2f4b99f](https://github.com/NowaraJS/logger/commit/2f4b99f))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.11
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.10...v1.1.11)
