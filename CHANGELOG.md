@@ -1,4 +1,25 @@
 
+## v1.1.11
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.10...v1.1.11)
+
+### 🧹 Refactors
+
+- **🧹:** [Simplify error handling in Logger class] ([5858658](https://github.com/NowaraJS/logger/commit/5858658))
+
+### 📦 Build
+
+- **📦:** [Update deps] ([ed92fa4](https://github.com/NowaraJS/logger/commit/ed92fa4))
+- **📦:** [Update @nowarajs/error dependency to version 1.3.0] Updated the @nowarajs/error dependency in devDependencies from version 1.2.0 to 1.3.0 to ensure compatibility with the latest features and improvements. ([84da4b2](https://github.com/NowaraJS/logger/commit/84da4b2))
+
+### 🦉 Chore
+
+- **🦉:** [Add Dependabot configuration for package updates] This commit introduces a new Dependabot configuration file to automate dependency updates for the "bun" package ecosystem. The updates are scheduled to occur daily, ensuring that the project remains up-to-date with the latest versions of its dependencies. ([d155f90](https://github.com/NowaraJS/logger/commit/d155f90))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.10
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.9...v1.1.10)
