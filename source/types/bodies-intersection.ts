@@ -1,4 +1,4 @@
-import type { SinkBody } from './sinkBody';
+import type { SinkBody } from './sink-body';
 
 export type BodiesIntersection<TSinks, K extends keyof TSinks> = (
 	K extends unknown

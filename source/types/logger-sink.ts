@@ -1,4 +1,4 @@
-import type { LogLevels } from './logLevels';
+import type { LogLevels } from './log-levels';
 
 export interface LoggerSink<TLogObject = unknown> {
 	/**

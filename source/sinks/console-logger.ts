@@ -1,5 +1,5 @@
-import type { LoggerSink } from '#/types/loggerSink';
-import type { LogLevels } from '#/types/logLevels';
+import type { LoggerSink } from '#/types/logger-sink';
+import type { LogLevels } from '#/types/log-levels';
 
 /**
 * ConsoleLoggerSink implements LoggerSink to provide logging functionality to the console.

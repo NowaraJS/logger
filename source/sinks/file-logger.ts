@@ -1,7 +1,7 @@
 import { appendFile } from 'fs/promises';
 
-import type { LoggerSink } from '#/types/loggerSink';
-import type { LogLevels } from '#/types/logLevels';
+import type { LoggerSink } from '#/types/logger-sink';
+import type { LogLevels } from '#/types/log-levels';
 
 /**
 * FileLoggerSink implements LoggerSink to provide logging functionality to the file system.

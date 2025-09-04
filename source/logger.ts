@@ -3,13 +3,13 @@ import { TypedEventEmitter } from '@nowarajs/typed-event-emitter';
 import { once } from 'events';
 import { Transform } from 'stream';
 
-import { LOGGER_ERROR_KEYS } from './enums/loggerErrorKeys';
-import type { LoggerEvent } from './events/loggerEvents';
-import type { BodiesIntersection } from './types/bodiesIntersection';
-import type { LogLevels } from './types/logLevels';
-import type { LogStreamChunk } from './types/logStreamChunk';
-import type { LoggerSink } from './types/loggerSink';
-import type { SinkMap } from './types/sinkMap';
+import { LOGGER_ERROR_KEYS } from './enums/logger-error-keys';
+import type { LoggerEvent } from './events/logger-events';
+import type { BodiesIntersection } from './types/bodies-intersection';
+import type { LogLevels } from './types/log-levels';
+import type { LogStreamChunk } from './types/log-stream-chunk';
+import type { LoggerSink } from './types/logger-sink';
+import type { SinkMap } from './types/sink-map';
 
 /**
  * Logger provides a flexible, type-safe logging system that allows multiple sinks for log output.
