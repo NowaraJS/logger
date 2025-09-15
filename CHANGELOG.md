@@ -1,4 +1,24 @@
 
+## v1.1.13
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.12...v1.1.13)
+
+### 🧹 Refactors
+
+- **🧹:** [Update exports in enums and remove unused test file] ## Refactoring - Changed export syntax for LOGGER_ERROR_KEYS in index.ts. - Added new index.ts for LoggerEvent export. - Deleted unused logger-error.spec.ts test file to clean up the codebase. ([aa8839a](https://github.com/NowaraJS/logger/commit/aa8839a))
+
+### 📦 Build
+
+- **📦:** [Update devDependencies in package.json] ([fe52608](https://github.com/NowaraJS/logger/commit/fe52608))
+
+### 🦉 Chore
+
+- **🦉:** [Change Dependabot update schedule to weekly] ([7db4c2d](https://github.com/NowaraJS/logger/commit/7db4c2d))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.12
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.11...v1.1.12)
