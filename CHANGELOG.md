@@ -1,4 +1,16 @@
 
+## v1.1.14
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.13...v1.1.14)
+
+### 📦 Build
+
+- **📦:** [Update Dependencies] ([7d2dcb8](https://github.com/NowaraJS/logger/commit/7d2dcb8))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.13
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.12...v1.1.13)
