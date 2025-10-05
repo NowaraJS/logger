@@ -11,8 +11,8 @@ import type { LogLevels } from '#/types/log-levels';
 /**
  * Tests for the Logger class (immutable API).
  */
-describe('Logger', () => {
-	describe('constructor', () => {
+describe.concurrent('Logger', () => {
+	describe.concurrent('constructor', () => {
 		test('should create a new instance of Logger with default maxPendingLogs', () => {
 			const logger: Logger = new Logger();
 			expect(logger).toBeInstanceOf(Logger);
@@ -24,7 +24,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('registerSink', () => {
+	describe.concurrent('registerSink', () => {
 		test('should add a sink and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
 			const sink: LoggerSink = { log: () => {} };
@@ -40,7 +40,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('unregisterSink', () => {
+	describe.concurrent('unregisterSink', () => {
 		test('should remove a sink and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
 			const sink: LoggerSink = { log: () => {} };
@@ -57,7 +57,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('registerSinks', () => {
+	describe.concurrent('registerSinks', () => {
 		test('should add multiple sinks and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
 			const sinks: [string, LoggerSink][] = [
@@ -81,7 +81,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('unregisterSinks', () => {
+	describe.concurrent('unregisterSinks', () => {
 		test('should remove multiple sinks and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
 			const sinks: [string, LoggerSink][] = [
@@ -105,7 +105,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('clearSinks', () => {
+	describe.concurrent('clearSinks', () => {
 		test('should clear all sinks and return a new Logger instance', () => {
 			const logger: Logger = new Logger();
 			const sink: LoggerSink = { log: () => {} };
@@ -115,7 +115,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('logging', () => {
+	describe.concurrent('logging', () => {
 		test.each([
 			['error', 'ERROR'],
 			['warn', 'WARN'],
@@ -148,7 +148,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('event emission', () => {
+	describe.concurrent('event emission', () => {
 		test('should emit an error when a sink throws', (done) => {
 			const sink: LoggerSink = {
 				log: () => {
@@ -172,7 +172,7 @@ describe('Logger', () => {
 		});
 	});
 
-	describe('internal behavior', () => {
+	describe.concurrent('internal behavior', () => {
 		test('should ignore logs when maxPendingLogs is reached', () => {
 			const sink: LoggerSink = { log: () => {} };
 			const logger = new Logger().registerSink('test', sink);
