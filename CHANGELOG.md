@@ -1,4 +1,28 @@
 
+## v1.1.15
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.14...v1.1.15)
+
+### 📦 Build
+
+- **📦:** [Update devDependencies and peerDependencies] ([0cce12e](https://github.com/NowaraJS/logger/commit/0cce12e))
+
+### 🦉 Chore
+
+- **🦉:** [Remove Dependabot configuration file] ([3b88246](https://github.com/NowaraJS/logger/commit/3b88246))
+
+### 🧪 Tests
+
+- **🧪:** [Refactor Logger tests to use concurrent execution] ([0c73b9b](https://github.com/NowaraJS/logger/commit/0c73b9b))
+
+### 🤖 CI
+
+- **🤖:** [Update CI/CD workflows and actions for Bun and Git setup] ([7b921ca](https://github.com/NowaraJS/logger/commit/7b921ca))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.14
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.13...v1.1.14)
