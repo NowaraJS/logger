@@ -16,13 +16,6 @@ export class ConsoleLoggerSink implements LoggerSink {
 		this._colorize = colorize;
 	}
 
-	/**
-	* Logs a message to the console with the specified log level.
-	*
-	* @param level - The log level at which the message should be logged.
-	* @param date - The date at which the message was logged.
-	* @param object - The object to log.
-	*/
 	public log(level: LogLevels, date: Date, object: unknown): void {
 		const colors: Record<LogLevels, string> = {
 			ERROR: '\x1b[31m',
