@@ -1,4 +1,20 @@
 
+## v1.1.16
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.15...v1.1.16)
+
+### 📖 Documentation
+
+- **📖:** [Remove unnecessary comments from logger classes] ([05b3891](https://github.com/NowaraJS/logger/commit/05b3891))
+
+### 📦 Build
+
+- **📦:** [Update typescript-eslint dependency to version 8.46.0] ([3f654e8](https://github.com/NowaraJS/logger/commit/3f654e8))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.15
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.14...v1.1.15)
