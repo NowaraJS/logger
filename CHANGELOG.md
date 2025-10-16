@@ -1,4 +1,29 @@
 
+## v1.2.0-1-20251016
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.1.16...v1.2.0-1-20251016)
+
+### 🚀 Enhancements
+
+- **🚀:** [New Logger system with worker] ([04968a0](https://github.com/NowaraJS/logger/commit/04968a0))
+
+### 🦉 Chore
+
+- **🦉:** [Add semver field to changelog types] ([c18563a](https://github.com/NowaraJS/logger/commit/c18563a))
+- **🦉:** [Update devDependencies in package.json] ([ffb80ee](https://github.com/NowaraJS/logger/commit/ffb80ee))
+
+### 🧪 Tests
+
+- **🧪:** [add placeblo test for the moment] ([8f5ff37](https://github.com/NowaraJS/logger/commit/8f5ff37))
+
+### 🎨 Styles
+
+- **🎨:** [Update ESLint configuration for improved styling rules] ([9c1c134](https://github.com/NowaraJS/logger/commit/9c1c134))
+
+### ❤️ Contributors
+
+- Komiroko <komiriko@pm.me>
+
 ## v1.1.16
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.1.15...v1.1.16)
