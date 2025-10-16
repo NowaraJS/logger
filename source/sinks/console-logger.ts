@@ -4,34 +4,9 @@ import type { LogLevels } from '#/types/log-levels';
 /**
 * ConsoleLoggerSink implements LoggerSink to provide logging functionality to the console.
 */
-export class ConsoleLoggerSink implements LoggerSink {
-	private readonly _colorize: boolean;
-
-	/**
-	* Initializes the ConsoleLoggerSink.
-	*
-	* @param colorize - Indicates if the output should be colorized. (Default is false.)
-	*/
-	public constructor(colorize = false) {
-		this._colorize = colorize;
-	}
-
-	public log(level: LogLevels, date: Date, object: unknown): void {
-		const colors: Record<LogLevels, string> = {
-			ERROR: '\x1b[31m',
-			WARN: '\x1b[33m',
-			INFO: '\x1b[36m',
-			DEBUG: '\x1b[34m',
-			LOG: '\x1b[35m'
-		};
-
-		const dateColor = this._colorize ? '\x1b[33m' : '';
-		const colorReset = this._colorize ? '\x1b[0m' : '';
-		const logLevelColor = this._colorize ? colors[level] : '';
-		const sanitizedObject: string = typeof object === 'string' ? object : JSON.stringify(object);
-		const prefixDate = `[${dateColor}${date.toISOString().replace(/T/, ' ').replace(/\..+/, '')}${colorReset}]`;
-		const message = `${prefixDate} ${logLevelColor}${level}${colorReset} : ${sanitizedObject}`;
-
-		console[level.toLowerCase() as 'error' | 'warn' | 'info' | 'debug' | 'log'](message);
+export class ConsoleLoggerSink<TLogObject = unknown> implements LoggerSink<TLogObject> {
+	public async log(level: LogLevels, timestamp: number, object: TLogObject): Promise<void> {
+		const sanitizedContent: string = typeof object === 'string' ? object : JSON.stringify(object);
+		await Bun.write(Bun.stdout, `{"timestamp":${timestamp},"level":"${level}","content":${sanitizedContent}}\n`);
 	}
 }
