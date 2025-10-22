@@ -23,7 +23,8 @@
 		"lint": "eslint ./source",
 		"test:integration": "bun test $(find test/integration -name '*.spec.ts')",
 		"test:unit": "bun test --coverage $(find test/unit -name '*.spec.ts')",
-		"test": "bun test --coverage"
+		"test": "bun test --coverage",
+		"bench": "bun bench/basic-overhead.bench.ts"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.38.0",
