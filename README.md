@@ -12,36 +12,31 @@
 	- [⚙️ Usage](#-usage)
 		- [Basic Setup](#basic-setup)
 		- [Multiple Sinks](#multiple-sinks)
-		- [Custom Sinks with Advanced Type Safety](#custom-sinks-with-advanced-type-safety)
-			- [Typed Sink Implementation](#typed-sink-implementation)
-			- [Body Intersection with Multiple Sinks](#body-intersection-with-multiple-sinks)
-			- [Mixed Sink Types](#mixed-sink-types)
+		- [Custom Sinks](#custom-sinks)
+		- [Type-Safe Logging](#type-safe-logging)
 		- [Error Handling](#error-handling)
-		- [Sink Management](#sink-management)
-		- [Available Log Levels](#available-log-levels)
-		- [Configuration Options](#configuration-options)
-	- [📚 API Reference](#-api-reference)
+		- [Flushing and Closing](#flushing-and-closing)
+		- [Configuration](#configuration)
 	- [⚖️ License](#-license)
 	- [📧 Contact](#-contact)
 
 ## 📝 Description
 
-> A TypeScript library that provides a modular, type-safe, and sink-based logging system designed specifically for Bun.
+> A TypeScript library that provides a modular, type-safe, and worker-based logging system designed specifically for Bun.
 
-**@nowarajs/logger** provides a flexible and high-performance logging system with advanced TypeScript support. It uses a sink pattern architecture that allows multiple logging destinations (console, file, custom) to be used individually or combined, with automatic type inference and body intersection for type-safe logging operations.
+**@nowarajs/logger** is a high-performance, asynchronous logging system built on top of Bun's worker threads. It provides a simple sink-based architecture for routing logs to multiple destinations (console, file, custom) with automatic type safety and zero-blocking guarantees.
 
 ## ✨ Features
 
-- 🔒 **Type Safety**: Full TypeScript support with advanced body intersection for type-safe logging
-- 🎯 **Sink Pattern**: Multiple logging sinks (console, file, custom) that can be used individually or combined
-- 🔄 **Non-blocking Architecture**: Uses transform streams and async processing for optimal performance
-- ⚡ **High Performance**: Queue-based system with configurable buffer limits (default: 10,000 logs)
-- 🎨 **Flexible Logging Levels**: Support for ERROR, WARN, INFO, DEBUG, and LOG levels
-- 🔗 **Event-Driven**: Emits typed events for error handling and lifecycle management
-- 🔧 **Immutable API**: Each operation returns a new logger instance for better state management
-- 📦 **Built-in Sinks**: Console logger with colorization and file logger included
-- 🛠️ **Custom Sink Support**: Easily create and register custom logging sinks with advanced type safety
-- 📜 **Body Intersection**: Automatically infers and enforces correct types based on selected sinks
+- ⚡ **Non-blocking**: All logging operations are processed in a worker thread
+- 🔒 **Type-safe**: Full TypeScript support with type inference for logged objects
+- 🎯 **Sink Pattern**: Route logs to multiple destinations (console, file, custom)
+- 📦 **Built-in Sinks**: Console and file logger included out of the box
+- 🔧 **Custom Sinks**: Easily create custom sinks for your specific needs
+- 🔄 **Batched Processing**: Automatic batching for better performance
+- 📊 **Log Levels**: ERROR, WARN, INFO, DEBUG, LOG
+- 🎛️ **Configurable**: Control batch size, timeout, queue limits and more
+- 🔔 **Event-driven**: Listen to lifecycle events (flush, close, errors)
 
 ## 🔧 Installation
 
@@ -61,235 +56,233 @@ bun add @nowarajs/error @nowarajs/typed-event-emitter
 
 ```typescript
 import { Logger } from '@nowarajs/logger';
-import { ConsoleLoggerSink, FileLoggerSink } from '@nowarajs/logger/sinks';
+import { ConsoleLoggerSink } from '@nowarajs/logger/sinks';
 
-// Create a logger with console strategy
+// Create a logger and register a console sink
 const logger = new Logger()
-    .registerStrategy('console', new ConsoleLoggerSink(true)); // with colors
+  .registerSink('console', ConsoleLoggerSink);
 
 // Log messages
-logger.info('Application started successfully');
+logger.info('Application started');
+logger.warn('This is a warning');
 logger.error('An error occurred');
-logger.debug('Debug information', ['console']); // specific strategy
+logger.debug('Debug info');
+logger.log('Generic log');
+
+// Close the logger when done
+await logger.close();
 ```
 
 ### Multiple Sinks
 
 ```typescript
-// Combine multiple sinks
-const logger = new Logger()
-    .registerStrategy('console', new ConsoleLoggerSink(true))
-    .registerStrategy('file', new FileLoggerSink('./app.log'));
+import { Logger } from '@nowarajs/logger';
+import { ConsoleLoggerSink, FileLoggerSink } from '@nowarajs/logger/sinks';
 
-// Logs to both console and file
-logger.info('This goes to both sinks');
+// Register multiple sinks
+const logger = new Logger()
+  .registerSink('console', ConsoleLoggerSink)
+  .registerSink('file', FileLoggerSink, './app.log');
+
+// Log to all sinks
+logger.info('This goes to console and file');
 
 // Log to specific sinks only
-logger.error('Critical error', ['file']); // only to file
-logger.warn('Warning message', ['console']); // only to console
+logger.error('Only in file', ['file']);
+logger.warn('Only in console', ['console']);
+
+await logger.close();
 ```
 
-### Custom Sinks with Advanced Type Safety
-
-The most powerful feature of @nowarajs/logger is its **advanced type safety system**. You can create custom logging sinks with typed objects, and TypeScript will automatically infer and enforce the correct types based on your selected sinks through **body intersection**.
-
-#### Typed Sink Implementation
-
-When you implement `LoggerSink<TLogObject>`, you specify the exact type of object that sink expects:
+### Custom Sinks
 
 ```typescript
-import { Logger } from '@nowarajs/logger';
 import type { LoggerSink, LogLevels } from '@nowarajs/logger/types';
 
-// Define specific interfaces for different logging contexts
-interface DatabaseLog {
-    userId: number;
-    action: string;
-    metadata?: Record<string, unknown>;
+// Create a custom sink
+class DatabaseSink implements LoggerSink {
+  public async log(level: LogLevels, timestamp: number, object: unknown): Promise<void> {
+	// Your custom logging logic
+	await saveToDatabase({ level, timestamp, object });
+  }
+}
+
+const logger = new Logger()
+  .registerSink('database', DatabaseSink);
+
+logger.info('Logged to database');
+await logger.close();
+```
+
+### Type-Safe Logging
+
+One of the most powerful features is **automatic type safety**. When you create typed sinks, TypeScript automatically infers the correct object shape for logging. When using multiple sinks, it even creates an **intersection type** of all sink types.
+
+#### Single Typed Sink
+
+```typescript
+import type { LoggerSink, LogLevels } from '@nowarajs/logger/types';
+
+// Define your log object type
+interface UserLog {
+  userId: number;
+  action: string;
+  timestamp?: Date;
+}
+
+// Create a typed sink
+class UserLogSink implements LoggerSink<UserLog> {
+  public async log(level: LogLevels, timestamp: number, object: UserLog): Promise<void> {
+	console.log(`User ${object.userId} performed: ${object.action}`);
+  }
+}
+
+const logger = new Logger()
+  .registerSink('userLog', UserLogSink);
+
+// ✅ TypeScript requires the correct shape
+logger.info({
+  userId: 123,
+  action: 'login'
+});
+
+// ❌ TypeScript error: Missing required property 'action'
+logger.info({
+  userId: 123
+  // Error: Property 'action' is missing
+});
+```
+
+#### Multiple Typed Sinks with Intersection
+
+When logging to multiple typed sinks at the same time, TypeScript automatically creates an **intersection** of all types:
+
+```typescript
+interface UserLog {
+  userId: number;
+  action: string;
 }
 
 interface ApiLog {
-    endpoint: string;
-    method: string;
-    statusCode: number;
-    responseTime: number;
+  endpoint: string;
+  method: string;
+  statusCode: number;
 }
 
-// Create typed sinks
-class DatabaseLoggerStrategy implements LoggerSink<DatabaseLog> {
-    public async log(level: LogLevels, date: Date, object: DatabaseLog): Promise<void> {
-        // object is strictly typed as DatabaseLog
-        await saveToDatabase({ 
-            level, 
-            date, 
-            userId: object.userId,
-            action: object.action,
-            metadata: object.metadata 
-        });
-    }
+class UserLogSink implements LoggerSink<UserLog> {
+  public async log(level: LogLevels, timestamp: number, object: UserLog): Promise<void> {
+	await saveUser(object);
+  }
 }
 
-
-// You can just put the type directly in the log method and it will be automatically inferred
-class ApiLoggerStrategy implements LoggerSink {
-    public async log(level: LogLevels, date: Date, object: ApiLog): Promise<void> {
-        // object is strictly typed as ApiLog
-        await sendToMonitoring(`${object.method} ${object.endpoint} - ${object.statusCode} (${object.responseTime}ms)`);
-    }
+class ApiLogSink implements LoggerSink<ApiLog> {
+  public async log(level: LogLevels, timestamp: number, object: ApiLog): Promise<void> {
+	await saveApi(object);
+  }
 }
 
-// Register typed sinks
 const logger = new Logger()
-    .registerStrategy('database', new DatabaseLoggerStrategy())
-    .registerStrategy('api', new ApiLoggerStrategy())
-    .registerStrategy('console', new ConsoleLoggerSink()); // ConsoleLoggerSink<unknown>
+  .registerSink('user', UserLogSink)
+  .registerSink('api', ApiLogSink);
 
-// ✅ TypeScript enforces the correct types based on selected sinks
-logger.info({ 
-    userId: 123, 
-    action: 'login',
-    metadata: { ip: '192.168.1.1' } 
-}, ['database']); // Only DatabaseLog type required
-
-logger.error({
-    endpoint: '/api/users',
-    method: 'POST',
-    statusCode: 500,
-    responseTime: 1250
-}, ['api']); // Only ApiLog type required
-
-// ❌ TypeScript error: Missing required properties
+// ✅ When using both sinks, you need BOTH types combined
 logger.info({
-    userId: 123,
-    action: 'login'
-    // Error: object doesn't match ApiLog interface
-}, ['api']);
-```
+  userId: 123,
+  action: 'api_call',
+  endpoint: '/users',
+  method: 'POST',
+  statusCode: 201
+}, ['user', 'api']); // Logs to both sinks
 
-#### Body Intersection with Multiple Sinks
-
-When using multiple sinks simultaneously, @nowarajs/logger creates a **type intersection** of all selected sink types using the `BodiesIntersection` utility type:
-
-```typescript
-// ✅ TypeScript requires intersection of both types when using multiple sinks
+// ✅ When using only one sink, only that type is required
 logger.warn({
-    userId: 123,
-    action: 'failed_request',
-    endpoint: '/api/users',
-    method: 'POST', 
-    statusCode: 400,
-    responseTime: 200
-}, ['database', 'api']); // Both DatabaseLog & ApiLog types required
+  userId: 456,
+  action: 'failed_attempt'
+}, ['user']); // Only UserLog type required
 
-// ❌ TypeScript error: Missing ApiLog properties
+// ❌ TypeScript error: Missing 'endpoint', 'method', 'statusCode'
 logger.error({
-    userId: 123,
-    action: 'error'
-    // Error: Missing endpoint, method, statusCode, responseTime
-}, ['database', 'api']);
-
-// ✅ When no sinks specified, uses all sinks (intersection of all types)
-logger.log({
-    userId: 123,
-    action: 'system_event',
-    endpoint: '/health',
-    method: 'GET',
-    statusCode: 200,
-    responseTime: 50
-}); // DatabaseLog & ApiLog & unknown (console) intersection required
+  userId: 789,
+  action: 'error',
+  // Error: Missing api properties
+}, ['user', 'api']);
 ```
 
-#### Mixed Sink Types
+#### Mixed Typed and Untyped Sinks
 
-You can mix typed and untyped sinks. The intersection will include `unknown` for untyped sinks:
+When mixing typed and untyped sinks (like `ConsoleLoggerSink` which accepts `unknown`), the intersection includes `unknown`, allowing flexible logging:
 
 ```typescript
-// Using typed + untyped sinks  
-logger.info({
-    userId: 123,
-    action: 'mixed_log',
-    additionalData: 'any value' // ✅ Allowed due to intersection with unknown
-}, ['database', 'console']); // Type: DatabaseLog & unknown
+interface DatabaseLog {
+  query: string;
+  duration: number;
+}
 
-// TypeScript allows additional properties when unknown is in the intersection
-logger.debug({
-    userId: 123,
-    action: 'debug_info',
-    debugLevel: 3,
-    stackTrace: ['frame1', 'frame2'],
-    customField: { nested: 'data' }
-}, ['database', 'console']); // ✅ Extra properties allowed due to unknown intersection
+class DatabaseLogSink implements LoggerSink<DatabaseLog> {
+  public async log(level: LogLevels, timestamp: number, object: DatabaseLog): Promise<void> {
+	await logToDatabase(object);
+  }
+}
+
+const logger = new Logger()
+  .registerSink('database', DatabaseLogSink)
+  .registerSink('console', ConsoleLoggerSink); // Accepts unknown
+
+// ✅ This works - intersection with unknown allows extra properties
+logger.info({
+  query: 'SELECT * FROM users',
+  duration: 123,
+  customData: 'anything goes'
+}, ['database', 'console']);
 ```
 
 ### Error Handling
 
 ```typescript
 const logger = new Logger()
-    .registerStrategy('console', new ConsoleLoggerSink());
+  .registerSink('console', ConsoleLoggerSink);
 
 // Listen for errors
-logger.on('error', (error) => {
-    console.error('Logger error:', error);
+logger.on('sinkError', (error) => {
+  console.error('Logger error:', error.message);
 });
 
-// Listen for completion
-logger.on('end', () => {
-    console.log('All pending logs processed');
+logger.on('registerSinkError', (error) => {
+  console.error('Failed to register sink:', error.message);
 });
+
+logger.info('Safe to log');
+await logger.close();
 ```
 
-### Sink Management
+### Flushing and Closing
 
 ```typescript
-let logger = new Logger();
+const logger = new Logger()
+  .registerSink('console', ConsoleLoggerSink);
 
-// Add sinks
-logger = logger
-    .registerStrategy('console', new ConsoleLoggerSink())
-    .registerStrategy('file', new FileLoggerSink('./app.log'));
+logger.info('First message');
+logger.info('Second message');
 
-// Add multiple sinks at once
-logger = logger.registerStrategies([
-    ['database', new DatabaseLoggerStrategy()],
-    ['remote', new RemoteLoggerStrategy()]
-]);
+// Wait for all pending logs to be processed
+await logger.flush();
 
-// Remove sinks
-logger = logger.unregisterStrategy('database');
-logger = logger.unregisterStrategies(['file', 'remote']);
-
-// Clear all sinks
-logger = logger.clearStrategies();
+// Close the logger and release resources (internally calls flush)
+await logger.close();
 ```
 
-### Available Log Levels
+### Configuration
 
 ```typescript
-logger.error('Error message');   // ERROR level
-logger.warn('Warning message');  // WARN level  
-logger.info('Info message');     // INFO level
-logger.debug('Debug message');   // DEBUG level
-logger.log('Generic message');   // LOG level
-```
-
-### Configuration Options
-
-```typescript
-// Custom queue size (default: 10,000)
-const logger = new Logger({}, 5000);
-
-// With initial sinks
 const logger = new Logger({
-    console: new ConsoleLoggerSink(true),
-    file: new FileLoggerSink('./app.log')
+  maxPendingLogs: 5000,      // Max queued logs (default: 10,000)
+  batchSize: 50,             // Logs per batch (default: 50)
+  batchTimeout: 100,         // Ms before flushing batch (default: 0.1)
+  maxMessagesInFlight: 100,  // Max batches being processed (default: 100)
+  autoEnd: true,             // Auto-close on process exit (default: true)
+  flushOnBeforeExit: true    // Flush before exit (default: true)
 });
 ```
-
-## 📚 API Reference
-
-You can find the complete API reference documentation for `@nowarajs/logger` at:
-
-- [Reference Documentation](https://nowarajs.github.io/logger)
 
 
 ## ⚖️ License
