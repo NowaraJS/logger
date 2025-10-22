@@ -18,8 +18,8 @@
         "typescript-eslint": "latest",
       },
       "peerDependencies": {
-        "@nowarajs/error": "^1.3.5",
-        "@nowarajs/typed-event-emitter": "^1.1.22",
+        "@nowarajs/error": "^1.3.6",
+        "@nowarajs/typed-event-emitter": "^1.1.23",
       },
     },
   },
@@ -58,7 +58,7 @@
 
     "@nodelib/fs.walk": ["@nodelib/fs.walk@1.2.8", "", { "dependencies": { "@nodelib/fs.scandir": "2.1.5", "fastq": "^1.6.0" } }, "sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg=="],
 
-    "@nowarajs/error": ["@nowarajs/error@1.3.6", "", {}, "sha512-JTpCyFbo0FED6411A8E88X+LQ0HQ9HY0jdoZv4Y6jX/U4kuDE7M4+vO2HVe/dtB3diMN13NF+1ghRwmKuBEaYA=="],
+    "@nowarajs/error": ["@nowarajs/error@1.3.7", "", {}, "sha512-Bp22tCmG9/WXH5ibj4+4hd4XB6Si0rxtC7+cbtRDvKJmZB6zV/1uUOgImQuXMJ2F2UuHNua4fMxO+TrZKWJsUg=="],
 
     "@nowarajs/typed-event-emitter": ["@nowarajs/typed-event-emitter@1.1.23", "", {}, "sha512-tx8aop9vbwoJeHjs2CiMY89U35lL2slMbmyf1vxvo88cNT5VZXkmzokUNNfq13TeXSwT5Irk1o9CxByZTsbazQ=="],
 
