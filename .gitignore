@@ -20,3 +20,6 @@ node_modules/
 .idea
 .vscode
 .zed
+
+# === Sandboxes and temporary files ===
+sandbox/
