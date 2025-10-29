@@ -130,7 +130,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		this._batchTimeout = batchTimeout;
 		this._autoEnd = autoEnd;
 		this._flushOnBeforeExit = flushOnBeforeExit;
-		this._worker = new Worker(new URL('worker-logger.ts', import.meta.url).href, { type: 'module' }); // create a new worker
+		this._worker = new Worker(new URL('worker-logger.js', import.meta.url).href, { type: 'module' }); // create a new worker
 		this._setupWorkerMessages(); // setup message handling from the worker
 		if (this._autoEnd)
 			this._setupAutoEnd(); // setup auto-end on process exit
