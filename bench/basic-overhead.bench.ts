@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
 import { createWriteStream } from 'fs';
-import { bench, do_not_optimize, group, run, summary, barplot } from 'mitata';
+import { barplot, bench, do_not_optimize, group, run, summary } from 'mitata';
 import pino from 'pino';
 
-import { Logger } from '#/logger.ts';
-import { DevNullLoggerSink } from '#/sinks/devnull-logger.ts';
+import { Logger } from '#/logger';
+import { DevNullLoggerSink } from '#/sinks/devnull-logger';
 
-const nowaraLogger = new Logger()
+const nowaraLogger = new Logger({
+	batchTimeout: 10
+})
 	.registerSink('devnull', DevNullLoggerSink);
 
 const pinoNodeStreamLogger = pino(createWriteStream('/dev/null'));

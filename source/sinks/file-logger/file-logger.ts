@@ -1,4 +1,4 @@
-import { BaseError } from '@nowarajs/error';
+import { InternalError } from '@nowarajs/error';
 import { createWriteStream, type WriteStream } from 'node:fs';
 
 import type { LogLevels } from '#/types/log-levels';
@@ -56,7 +56,7 @@ export class FileLoggerSink<TLogObject = unknown> implements LoggerSink<TLogObje
 
 		return new Promise<void>((resolve, reject) => {
 			this._stream.end((err: Error | null | undefined) => {
-				if (err) reject(new BaseError(FILE_LOGGER_ERROR_KEYS.FAILED_TO_CLOSE_STREAM, err.message));
+				if (err) reject(new InternalError(FILE_LOGGER_ERROR_KEYS.FAILED_TO_CLOSE_STREAM, err.message));
 				else resolve();
 			});
 		});

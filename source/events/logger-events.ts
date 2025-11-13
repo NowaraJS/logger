@@ -1,12 +1,12 @@
-import type { BaseError } from '@nowarajs/error';
+import type { InternalError } from '@nowarajs/error';
 
 export interface LoggerEvent {
-	onBeforeExitError: [BaseError<{ error: Error }>];
-	registerSinkError: [BaseError<{
+	onBeforeExitError: [InternalError<{ error: Error }>];
+	registerSinkError: [InternalError<{
 		sinkName: string;
 		error: Error;
 	}>];
-	sinkError: [BaseError<{
+	sinkError: [InternalError<{
 		sinkName: string;
 		object?: unknown;
 		error: Error;
