@@ -1,42 +1,31 @@
-# 🎯 NowaraJS - Logger
+# 🎯 NowaraJS Logger
 
 ![nowarajs-logger-wall](https://github.com/user-attachments/assets/8ed0c4fa-f41a-4d86-bbba-d7a3aa49db47)
 
+Logging in Bun often means choosing between "fast but dumb" or "smart but blocking". I built NowaraJS Logger because I wanted both: a type-safe, sink-based system that never blocks your main thread.
+
+## Why this package?
+
+The goal is simple: **Stop your logs from slowing down your app.**
+
+Most loggers either block on every write or lose type safety when you need structured logging. This package runs everything in a worker thread, batches automatically, and still gives you full TypeScript inference on what you log.
+
 ## 📌 Table of Contents
 
-- [🎯 NowaraJS - Logger](#-nowarajs---logger)
-	- [📌 Table of Contents](#-table-of-contents)
-	- [📝 Description](#-description)
-	- [✨ Features](#-features)
-	- [🔧 Installation](#-installation)
-	- [⚙️ Usage](#-usage)
-		- [Basic Setup](#basic-setup)
-		- [Multiple Sinks](#multiple-sinks)
-		- [Custom Sinks](#custom-sinks)
-		- [Type-Safe Logging](#type-safe-logging)
-		- [Error Handling](#error-handling)
-		- [Flushing and Closing](#flushing-and-closing)
-		- [Configuration](#configuration)
-	- [⚖️ License](#-license)
-	- [📧 Contact](#-contact)
-
-## 📝 Description
-
-> A TypeScript library that provides a modular, type-safe, and worker-based logging system designed specifically for Bun.
-
-**@nowarajs/logger** is a high-performance, asynchronous logging system built on top of Bun's worker threads. It provides a simple sink-based architecture for routing logs to multiple destinations (console, file, custom) with automatic type safety and zero-blocking guarantees.
+- [Features](#-features)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [API Reference](#-api-reference)
+- [License](#-license)
+- [Contact](#-contact)
 
 ## ✨ Features
 
-- ⚡ **Non-blocking**: All logging operations are processed in a worker thread
-- 🔒 **Type-safe**: Full TypeScript support with type inference for logged objects
-- 🎯 **Sink Pattern**: Route logs to multiple destinations (console, file, custom)
-- 📦 **Built-in Sinks**: Console and file logger included out of the box
-- 🔧 **Custom Sinks**: Easily create custom sinks for your specific needs
-- 🔄 **Batched Processing**: Automatic batching for better performance
-- 📊 **Log Levels**: ERROR, WARN, INFO, DEBUG, LOG
-- 🎛️ **Configurable**: Control batch size, timeout, queue limits and more
-- 🔔 **Event-driven**: Listen to lifecycle events (flush, close, errors)
+- ⚡ **Zero Blocking**: Every log goes through a worker thread – your main loop stays fast.
+- 🔒 **Type-Safe**: TypeScript infers the shape of your logs. No more `any` everywhere.
+- 🎯 **Sink Pattern**: Route logs to console, file, database, or your own custom destination.
+- 🔄 **Smart Batching**: Logs are grouped automatically for better I/O performance.
+- 🔔 **Event-Driven**: Listen to flush, close, and error events when you need them.
 
 ## 🔧 Installation
 
@@ -44,8 +33,7 @@
 bun add @nowarajs/logger
 ```
 
-### Peer Dependencies
-#### Required :
+You'll also need:
 ```bash
 bun add @nowarajs/error @nowarajs/typed-event-emitter
 ```
@@ -53,6 +41,8 @@ bun add @nowarajs/error @nowarajs/typed-event-emitter
 ## ⚙️ Usage
 
 ### Basic Setup
+
+Create a logger, attach a sink, and start logging:
 
 ```typescript
 import { Logger } from '@nowarajs/logger';
@@ -62,18 +52,20 @@ import { ConsoleLoggerSink } from '@nowarajs/logger/sinks';
 const logger = new Logger()
   .registerSink('console', ConsoleLoggerSink);
 
-// Log messages
-logger.info('Application started');
-logger.warn('This is a warning');
-logger.error('An error occurred');
-logger.debug('Debug info');
-logger.log('Generic log');
+// Log messages (always pass an object)
+logger.info({ message: 'Application started' });
+logger.warn({ message: 'This is a warning' });
+logger.error({ message: 'An error occurred', code: 500 });
+logger.debug({ action: 'debug_info', data: { foo: 'bar' } });
+logger.log({ event: 'generic_log' });
 
 // Close the logger when done
 await logger.close();
 ```
 
 ### Multiple Sinks
+
+Need logs going to different places? Register as many sinks as you want:
 
 ```typescript
 import { Logger } from '@nowarajs/logger';
@@ -85,16 +77,18 @@ const logger = new Logger()
   .registerSink('file', FileLoggerSink, './app.log');
 
 // Log to all sinks
-logger.info('This goes to console and file');
+logger.info({ message: 'This goes to console and file' });
 
 // Log to specific sinks only
-logger.error('Only in file', ['file']);
-logger.warn('Only in console', ['console']);
+logger.error({ message: 'Only in file' }, ['file']);
+logger.warn({ message: 'Only in console' }, ['console']);
 
 await logger.close();
 ```
 
 ### Custom Sinks
+
+Have a weird logging requirement? Write your own sink:
 
 ```typescript
 import type { LoggerSink, LogLevels } from '@nowarajs/logger/types';
@@ -102,21 +96,21 @@ import type { LoggerSink, LogLevels } from '@nowarajs/logger/types';
 // Create a custom sink
 class DatabaseSink implements LoggerSink {
   public async log(level: LogLevels, timestamp: number, object: unknown): Promise<void> {
-	// Your custom logging logic
-	await saveToDatabase({ level, timestamp, object });
+    // Your custom logging logic
+    await saveToDatabase({ level, timestamp, object });
   }
 }
 
 const logger = new Logger()
   .registerSink('database', DatabaseSink);
 
-logger.info('Logged to database');
+logger.info({ event: 'user_created', userId: 42 });
 await logger.close();
 ```
 
 ### Type-Safe Logging
 
-One of the most powerful features is **automatic type safety**. When you create typed sinks, TypeScript automatically infers the correct object shape for logging. When using multiple sinks, it even creates an **intersection type** of all sink types.
+This is where it gets interesting. When you define typed sinks, TypeScript knows exactly what shape your logs need. No more guessing, no more runtime surprises.
 
 #### Single Typed Sink
 
@@ -153,9 +147,9 @@ logger.info({
 });
 ```
 
-#### Multiple Typed Sinks with Intersection
+#### Multiple Typed Sinks
 
-When logging to multiple typed sinks at the same time, TypeScript automatically creates an **intersection** of all types:
+When logging to multiple sinks at once, TypeScript creates an intersection of all types. You need to satisfy all of them:
 
 ```typescript
 interface UserLog {
@@ -200,17 +194,16 @@ logger.warn({
   action: 'failed_attempt'
 }, ['user']); // Only UserLog type required
 
-// ❌ TypeScript error: Missing 'endpoint', 'method', 'statusCode'
+// ❌ TypeScript error: Missing api properties
 logger.error({
   userId: 789,
   action: 'error',
-  // Error: Missing api properties
 }, ['user', 'api']);
 ```
 
-#### Mixed Typed and Untyped Sinks
+#### Mixing Typed and Untyped Sinks
 
-When mixing typed and untyped sinks (like `ConsoleLoggerSink` which accepts `unknown`), the intersection includes `unknown`, allowing flexible logging:
+When you mix typed sinks with untyped ones (like `ConsoleLoggerSink` which accepts `unknown`), things stay flexible:
 
 ```typescript
 interface DatabaseLog {
@@ -238,31 +231,35 @@ logger.info({
 
 ### Error Handling
 
+Things break. When they do, you'll want to know:
+
 ```typescript
 const logger = new Logger()
   .registerSink('console', ConsoleLoggerSink);
 
 // Listen for errors
-logger.on('sinkError', (error) => {
+logger.addListener('sinkError', (error) => {
   console.error('Logger error:', error.message);
 });
 
-logger.on('registerSinkError', (error) => {
+logger.addListener('registerSinkError', (error) => {
   console.error('Failed to register sink:', error.message);
 });
 
-logger.info('Safe to log');
+logger.info({ message: 'Safe to log' });
 await logger.close();
 ```
 
 ### Flushing and Closing
 
+When you need to make sure everything is written before shutting down:
+
 ```typescript
 const logger = new Logger()
   .registerSink('console', ConsoleLoggerSink);
 
-logger.info('First message');
-logger.info('Second message');
+logger.info({ message: 'First message' });
+logger.info({ message: 'Second message' });
 
 // Wait for all pending logs to be processed
 await logger.flush();
@@ -272,6 +269,8 @@ await logger.close();
 ```
 
 ### Configuration
+
+Fine-tune the batching and queue behavior:
 
 ```typescript
 const logger = new Logger({
@@ -284,10 +283,13 @@ const logger = new Logger({
 });
 ```
 
+## 📚 API Reference
+
+Full docs: [nowarajs.github.io/logger](https://nowarajs.github.io/logger/)
 
 ## ⚖️ License
 
-Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
+MIT – Use it however you want.
 
 ## 📧 Contact
 

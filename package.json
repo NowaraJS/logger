@@ -27,22 +27,22 @@
 		"bench": "bun bench/basic-overhead.bench.ts"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.39.1",
-		"@nowarajs/error": "^1.3.10",
-		"@nowarajs/typed-event-emitter": "^1.1.25",
-		"@stylistic/eslint-plugin": "^5.5.0",
-		"@types/bun": "^1.3.2",
-		"elysia": "^1.4.16",
-		"eslint": "^9.39.1",
-		"globals": "^16.5.0",
+		"@eslint/js": "^9.39.2",
+		"@nowarajs/error": "^1.4.0",
+		"@nowarajs/typed-event-emitter": "^1.1.26",
+		"@stylistic/eslint-plugin": "^5.7.0",
+		"@types/bun": "^1.3.5",
+		"elysia": "^1.4.21",
+		"eslint": "^9.39.2",
+		"globals": "^17.0.0",
 		"mitata": "^1.0.34",
-		"pino": "^10.1.0",
+		"pino": "^10.1.1",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.46.4"
+		"typescript-eslint": "^8.53.0"
 	},
 	"peerDependencies": {
-		"@nowarajs/error": "^1.3.10",
-		"@nowarajs/typed-event-emitter": "^1.1.25"
+		"@nowarajs/error": "^1.4.0",
+		"@nowarajs/typed-event-emitter": "^1.1.26"
 	},
 	"exports": {
 		"./enums": "./dist/enums/index.js",
