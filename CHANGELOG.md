@@ -1,4 +1,16 @@
 
+## v1.3.1
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.3.0...v1.3.1)
+
+### 🔧 Fixes
+
+- **🔧:** [Handle async and sync errors in sink logging] ([a8afcd1](https://github.com/NowaraJS/logger/commit/a8afcd1))
+
+### ❤️ Contributors
+
+- Komiriko <komiriko@pm.me>
+
 ## v1.3.0
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.2.0-1-20251016...v1.3.0)
