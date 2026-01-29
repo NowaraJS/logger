@@ -1,9 +1,6 @@
 import type { LogLevels } from './log-levels';
 
-export interface LoggerSink<
-	TLogObject = unknown,
-	TConfig = unknown
-> {
+export interface LoggerSink<TLogObject = unknown, TConfig = unknown> {
 	/** Optional configuration for the sink */
 	readonly config?: TConfig;
 
