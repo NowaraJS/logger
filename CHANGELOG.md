@@ -1,4 +1,16 @@
 
+## v1.3.3
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.3.2...v1.3.3)
+
+### 📦 Build
+
+- **📦:** [update deps + npmignore] ([8b06198](https://github.com/NowaraJS/logger/commit/8b06198))
+
+### ❤️ Contributors
+
+- Komiriko <komiriko@pm.me>
+
 ## v1.3.2
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.3.1...v1.3.2)
