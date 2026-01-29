@@ -40,9 +40,9 @@
 		"bench": "bun bench/basic-overhead.bench.ts"
 	},
 	"devDependencies": {
-		"@nowarajs/error": "^1.4.1",
-		"@nowarajs/typed-event-emitter": "^1.1.27",
-		"@types/bun": "^1.3.6",
+		"@nowarajs/error": "^1.4.3",
+		"@nowarajs/typed-event-emitter": "^1.1.28",
+		"@types/bun": "^1.3.7",
 		"mitata": "^1.0.34",
 		"oxfmt": "^0.27.0",
 		"oxlint": "^1.42.0",
@@ -51,8 +51,8 @@
 		"typescript": "^5.9.3"
 	},
 	"peerDependencies": {
-		"@nowarajs/error": "^1.4.1",
-		"@nowarajs/typed-event-emitter": "^1.1.27"
+		"@nowarajs/error": "^1.4.3",
+		"@nowarajs/typed-event-emitter": "^1.1.28"
 	},
 	"changelog": {
 		"types": {
