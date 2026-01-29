@@ -21,14 +21,16 @@ interface PendingLogMessage {
 	readonly object: unknown;
 }
 
-type WorkerResponseMessage
-	= | { type: 'BATCH_COMPLETE'; }
-		| { type: 'REGISTER_SINK_ERROR'; sinkName: string; error: Error; }
-		| { type: 'SINK_LOG_ERROR'; sinkName: string; error: Error; object: unknown; }
-		| { type: 'SINK_CLOSE_ERROR'; sinkName: string; error: Error; }
-		| { type: 'CLOSE_COMPLETE'; };
+type WorkerResponseMessage =
+	| { type: 'BATCH_COMPLETE' }
+	| { type: 'REGISTER_SINK_ERROR'; sinkName: string; error: Error }
+	| { type: 'SINK_LOG_ERROR'; sinkName: string; error: Error; object: unknown }
+	| { type: 'SINK_CLOSE_ERROR'; sinkName: string; error: Error }
+	| { type: 'CLOSE_COMPLETE' };
 
-export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<LoggerEvent> {
+export class Logger<
+	TSinks extends SinkMap = Record<string, never>
+> extends TypedEventEmitter<LoggerEvent> {
 	/**
 	 * Map of registered sinks (logging destinations)
 	 */
@@ -131,10 +133,14 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		this._batchTimeout = batchTimeout;
 		this._autoEnd = autoEnd;
 		this._flushOnBeforeExit = flushOnBeforeExit;
-		this._worker = new Worker(URL.createObjectURL(new Blob([`(${workerFunction.toString()})()`], { type: 'application/javascript' })), { type: 'module' }); // create a new worker
+		this._worker = new Worker(
+			URL.createObjectURL(
+				new Blob([`(${workerFunction.toString()})()`], { type: 'application/javascript' })
+			),
+			{ type: 'module' }
+		); // create a new worker
 		this._setupWorkerMessages(); // setup message handling from the worker
-		if (this._autoEnd)
-			this._setupAutoEnd(); // setup auto-end on process exit
+		if (this._autoEnd) this._setupAutoEnd(); // setup auto-end on process exit
 	}
 
 	/**
@@ -166,7 +172,9 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 		});
 		this._sinks[sinkName as keyof TSinks] = sinkConstructor as unknown as TSinks[keyof TSinks];
 		this._sinkKeys.push(sinkName as keyof TSinks);
-		return this as unknown as Logger<TSinks & Record<TSinkName, new (...args: TSinkArgs) => TSink>>;
+		return this as unknown as Logger<
+			TSinks & Record<TSinkName, new (...args: TSinkArgs) => TSink>
+		>;
 	}
 
 	/**
@@ -237,9 +245,9 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	/**
 	 * Flushes all pending logs and waits for them to be processed.
 	 */
-	public async flush(): Promise<void> {
+	public flush(): Promise<void> {
 		if (this._pendingLogs.length === 0 && this._messagesInFlight === 0)
-			return;
+			return Promise.resolve();
 
 		return new Promise<void>((resolve) => {
 			this._flushResolvers.push(resolve);
@@ -279,8 +287,7 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 			throw new InternalError(LOGGER_ERROR_KEYS.NO_SINKS_PROVIDED, { level, object });
 
 		const pendingLength = this._pendingLogs.length;
-		if (pendingLength >= this._maxPendingLogs)
-			return;
+		if (pendingLength >= this._maxPendingLogs) return;
 
 		this._pendingLogs.push({
 			sinkNames: (sinkNames ?? this._sinkKeys) as string[],
@@ -296,21 +303,19 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 				this._batchTimer = null;
 			}
 			this._triggerProcessing();
-		} else if (this._batchTimer === null && this._batchTimeout > 0) {
+		} else if (this._batchTimer === null && this._batchTimeout > 0)
 			// Otherwise, start a timer if not already started
 			this._batchTimer = setTimeout(() => {
 				this._batchTimer = null;
 				this._triggerProcessing();
 			}, this._batchTimeout);
-		}
 	}
 
 	/**
 	 * Triggers processing of pending logs.
 	 */
 	private _triggerProcessing(): void {
-		if (this._isWriting)
-			return;
+		if (this._isWriting) return;
 		this._isWriting = true;
 		void this._processPendingLogs();
 	}
@@ -352,50 +357,58 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 	 * Sets up message handling for the worker.
 	 */
 	private _setupWorkerMessages(): void {
-		this._worker.addEventListener('message', (event: BunMessageEvent<WorkerResponseMessage>) => {
-			switch (event.data.type) {
-				case 'BATCH_COMPLETE':
-					this._releaseBatch();
+		this._worker.addEventListener(
+			'message',
+			(event: BunMessageEvent<WorkerResponseMessage>) => {
+				switch (event.data.type) {
+					case 'BATCH_COMPLETE':
+						this._releaseBatch();
 
-					if (this._messagesInFlight === 0 && this._pendingLogs.length === 0 && this._flushResolvers.length > 0) {
-						for (const resolve of this._flushResolvers)
-							resolve();
-						this._flushResolvers.length = 0;
-					}
-					break;
+						if (
+							this._messagesInFlight === 0 &&
+							this._pendingLogs.length === 0 &&
+							this._flushResolvers.length > 0
+						) {
+							for (const resolve of this._flushResolvers) resolve();
+							this._flushResolvers.length = 0;
+						}
+						break;
 
-				case 'SINK_LOG_ERROR':
-					this.emit('sinkError', new InternalError(
-						LOGGER_ERROR_KEYS.SINK_LOG_ERROR,
-						event.data
-					));
+					case 'SINK_LOG_ERROR':
+						this.emit(
+							'sinkError',
+							new InternalError(LOGGER_ERROR_KEYS.SINK_LOG_ERROR, event.data)
+						);
 
-					this._releaseBatch();
-					break;
+						this._releaseBatch();
+						break;
 
-				case 'SINK_CLOSE_ERROR':
-					this.emit('sinkError', new InternalError(
-						LOGGER_ERROR_KEYS.SINK_CLOSE_ERROR,
-						event.data
-					));
-					break;
+					case 'SINK_CLOSE_ERROR':
+						this.emit(
+							'sinkError',
+							new InternalError(LOGGER_ERROR_KEYS.SINK_CLOSE_ERROR, event.data)
+						);
+						break;
 
-				case 'REGISTER_SINK_ERROR':
-					this.emit('registerSinkError', new InternalError(
-						LOGGER_ERROR_KEYS.REGISTER_SINK_ERROR,
-						event.data
-					));
-					break;
+					case 'REGISTER_SINK_ERROR':
+						this.emit(
+							'registerSinkError',
+							new InternalError(LOGGER_ERROR_KEYS.REGISTER_SINK_ERROR, event.data)
+						);
+						break;
 
-				case 'CLOSE_COMPLETE':
-					this._worker.terminate();
-					if (this._closeResolver) {
-						this._closeResolver();
-						this._closeResolver = null;
-					}
-					break;
+					case 'CLOSE_COMPLETE':
+						this._worker.terminate();
+						if (this._closeResolver) {
+							this._closeResolver();
+							this._closeResolver = null;
+						}
+						break;
+					default:
+						break;
+				}
 			}
-		});
+		);
 	}
 
 	/**
@@ -415,17 +428,21 @@ export class Logger<TSinks extends SinkMap = {}> extends TypedEventEmitter<Logge
 			void this.flush()
 				.then(() => this.close())
 				.catch((error: unknown) => {
-					this.emit('onBeforeExitError', new InternalError(
-						LOGGER_ERROR_KEYS.BEFORE_EXIT_FLUSH_ERROR,
-						{ error: error as Error }
-					));
+					this.emit(
+						'onBeforeExitError',
+						new InternalError(LOGGER_ERROR_KEYS.BEFORE_EXIT_FLUSH_ERROR, {
+							error: error as Error
+						})
+					);
 				});
 		else
 			void this.close().catch((error: unknown) => {
-				this.emit('onBeforeExitError', new InternalError(
-					LOGGER_ERROR_KEYS.BEFORE_EXIT_CLOSE_ERROR,
-					{ error: error as Error }
-				));
+				this.emit(
+					'onBeforeExitError',
+					new InternalError(LOGGER_ERROR_KEYS.BEFORE_EXIT_CLOSE_ERROR, {
+						error: error as Error
+					})
+				);
 			});
 	};
 }

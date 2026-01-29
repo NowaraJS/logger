@@ -18,17 +18,14 @@ export class FileLoggerSink<TLogObject = unknown> implements LoggerSink<TLogObje
 	}
 
 	public log(level: LogLevels, timestamp: number, object: TLogObject): void {
-		if (this._isClosed)
-			return;
+		if (this._isClosed) return;
 		const logEntry = JSON.stringify({ timestamp, level, content: object }) + '\n';
-		this._sink.write(logEntry);
+		void this._sink.write(logEntry);
 	}
 
 	public async close(): Promise<void> {
-		if (this._isClosed)
-			return;
+		if (this._isClosed) return;
 		this._isClosed = true;
 		await this._sink.end();
 	}
 }
-

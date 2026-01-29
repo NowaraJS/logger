@@ -34,6 +34,7 @@ bun add @nowarajs/logger
 ```
 
 You'll also need:
+
 ```bash
 bun add @nowarajs/error @nowarajs/typed-event-emitter
 ```
@@ -49,8 +50,7 @@ import { Logger } from '@nowarajs/logger';
 import { ConsoleLoggerSink } from '@nowarajs/logger/sinks';
 
 // Create a logger and register a console sink
-const logger = new Logger()
-  .registerSink('console', ConsoleLoggerSink);
+const logger = new Logger().registerSink('console', ConsoleLoggerSink);
 
 // Log messages (always pass an object)
 logger.info({ message: 'Application started' });
@@ -73,8 +73,8 @@ import { ConsoleLoggerSink, FileLoggerSink } from '@nowarajs/logger/sinks';
 
 // Register multiple sinks
 const logger = new Logger()
-  .registerSink('console', ConsoleLoggerSink)
-  .registerSink('file', FileLoggerSink, './app.log');
+	.registerSink('console', ConsoleLoggerSink)
+	.registerSink('file', FileLoggerSink, './app.log');
 
 // Log to all sinks
 logger.info({ message: 'This goes to console and file' });
@@ -95,14 +95,13 @@ import type { LoggerSink, LogLevels } from '@nowarajs/logger/types';
 
 // Create a custom sink
 class DatabaseSink implements LoggerSink {
-  public async log(level: LogLevels, timestamp: number, object: unknown): Promise<void> {
-    // Your custom logging logic
-    await saveToDatabase({ level, timestamp, object });
-  }
+	public async log(level: LogLevels, timestamp: number, object: unknown): Promise<void> {
+		// Your custom logging logic
+		await saveToDatabase({ level, timestamp, object });
+	}
 }
 
-const logger = new Logger()
-  .registerSink('database', DatabaseSink);
+const logger = new Logger().registerSink('database', DatabaseSink);
 
 logger.info({ event: 'user_created', userId: 42 });
 await logger.close();
@@ -119,31 +118,30 @@ import type { LoggerSink, LogLevels } from '@nowarajs/logger/types';
 
 // Define your log object type
 interface UserLog {
-  userId: number;
-  action: string;
-  timestamp?: Date;
+	userId: number;
+	action: string;
+	timestamp?: Date;
 }
 
 // Create a typed sink
 class UserLogSink implements LoggerSink<UserLog> {
-  public async log(level: LogLevels, timestamp: number, object: UserLog): Promise<void> {
-	console.log(`User ${object.userId} performed: ${object.action}`);
-  }
+	public async log(level: LogLevels, timestamp: number, object: UserLog): Promise<void> {
+		console.log(`User ${object.userId} performed: ${object.action}`);
+	}
 }
 
-const logger = new Logger()
-  .registerSink('userLog', UserLogSink);
+const logger = new Logger().registerSink('userLog', UserLogSink);
 
 // ✅ TypeScript requires the correct shape
 logger.info({
-  userId: 123,
-  action: 'login'
+	userId: 123,
+	action: 'login'
 });
 
 // ❌ TypeScript error: Missing required property 'action'
 logger.info({
-  userId: 123
-  // Error: Property 'action' is missing
+	userId: 123
+	// Error: Property 'action' is missing
 });
 ```
 
@@ -153,52 +151,59 @@ When logging to multiple sinks at once, TypeScript creates an intersection of al
 
 ```typescript
 interface UserLog {
-  userId: number;
-  action: string;
+	userId: number;
+	action: string;
 }
 
 interface ApiLog {
-  endpoint: string;
-  method: string;
-  statusCode: number;
+	endpoint: string;
+	method: string;
+	statusCode: number;
 }
 
 class UserLogSink implements LoggerSink<UserLog> {
-  public async log(level: LogLevels, timestamp: number, object: UserLog): Promise<void> {
-	await saveUser(object);
-  }
+	public async log(level: LogLevels, timestamp: number, object: UserLog): Promise<void> {
+		await saveUser(object);
+	}
 }
 
 class ApiLogSink implements LoggerSink<ApiLog> {
-  public async log(level: LogLevels, timestamp: number, object: ApiLog): Promise<void> {
-	await saveApi(object);
-  }
+	public async log(level: LogLevels, timestamp: number, object: ApiLog): Promise<void> {
+		await saveApi(object);
+	}
 }
 
-const logger = new Logger()
-  .registerSink('user', UserLogSink)
-  .registerSink('api', ApiLogSink);
+const logger = new Logger().registerSink('user', UserLogSink).registerSink('api', ApiLogSink);
 
 // ✅ When using both sinks, you need BOTH types combined
-logger.info({
-  userId: 123,
-  action: 'api_call',
-  endpoint: '/users',
-  method: 'POST',
-  statusCode: 201
-}, ['user', 'api']); // Logs to both sinks
+logger.info(
+	{
+		userId: 123,
+		action: 'api_call',
+		endpoint: '/users',
+		method: 'POST',
+		statusCode: 201
+	},
+	['user', 'api']
+); // Logs to both sinks
 
 // ✅ When using only one sink, only that type is required
-logger.warn({
-  userId: 456,
-  action: 'failed_attempt'
-}, ['user']); // Only UserLog type required
+logger.warn(
+	{
+		userId: 456,
+		action: 'failed_attempt'
+	},
+	['user']
+); // Only UserLog type required
 
 // ❌ TypeScript error: Missing api properties
-logger.error({
-  userId: 789,
-  action: 'error',
-}, ['user', 'api']);
+logger.error(
+	{
+		userId: 789,
+		action: 'error'
+	},
+	['user', 'api']
+);
 ```
 
 #### Mixing Typed and Untyped Sinks
@@ -207,26 +212,29 @@ When you mix typed sinks with untyped ones (like `ConsoleLoggerSink` which accep
 
 ```typescript
 interface DatabaseLog {
-  query: string;
-  duration: number;
+	query: string;
+	duration: number;
 }
 
 class DatabaseLogSink implements LoggerSink<DatabaseLog> {
-  public async log(level: LogLevels, timestamp: number, object: DatabaseLog): Promise<void> {
-	await logToDatabase(object);
-  }
+	public async log(level: LogLevels, timestamp: number, object: DatabaseLog): Promise<void> {
+		await logToDatabase(object);
+	}
 }
 
 const logger = new Logger()
-  .registerSink('database', DatabaseLogSink)
-  .registerSink('console', ConsoleLoggerSink); // Accepts unknown
+	.registerSink('database', DatabaseLogSink)
+	.registerSink('console', ConsoleLoggerSink); // Accepts unknown
 
 // ✅ This works - intersection with unknown allows extra properties
-logger.info({
-  query: 'SELECT * FROM users',
-  duration: 123,
-  customData: 'anything goes'
-}, ['database', 'console']);
+logger.info(
+	{
+		query: 'SELECT * FROM users',
+		duration: 123,
+		customData: 'anything goes'
+	},
+	['database', 'console']
+);
 ```
 
 ### Error Handling
@@ -234,16 +242,15 @@ logger.info({
 Things break. When they do, you'll want to know:
 
 ```typescript
-const logger = new Logger()
-  .registerSink('console', ConsoleLoggerSink);
+const logger = new Logger().registerSink('console', ConsoleLoggerSink);
 
 // Listen for errors
 logger.addListener('sinkError', (error) => {
-  console.error('Logger error:', error.message);
+	console.error('Logger error:', error.message);
 });
 
 logger.addListener('registerSinkError', (error) => {
-  console.error('Failed to register sink:', error.message);
+	console.error('Failed to register sink:', error.message);
 });
 
 logger.info({ message: 'Safe to log' });
@@ -255,8 +262,7 @@ await logger.close();
 When you need to make sure everything is written before shutting down:
 
 ```typescript
-const logger = new Logger()
-  .registerSink('console', ConsoleLoggerSink);
+const logger = new Logger().registerSink('console', ConsoleLoggerSink);
 
 logger.info({ message: 'First message' });
 logger.info({ message: 'Second message' });
@@ -274,12 +280,12 @@ Fine-tune the batching and queue behavior:
 
 ```typescript
 const logger = new Logger({
-  maxPendingLogs: 5000,      // Max queued logs (default: 10,000)
-  batchSize: 50,             // Logs per batch (default: 50)
-  batchTimeout: 100,         // Ms before flushing batch (default: 0.1)
-  maxMessagesInFlight: 100,  // Max batches being processed (default: 100)
-  autoEnd: true,             // Auto-close on process exit (default: true)
-  flushOnBeforeExit: true    // Flush before exit (default: true)
+	maxPendingLogs: 5000, // Max queued logs (default: 10,000)
+	batchSize: 50, // Logs per batch (default: 50)
+	batchTimeout: 100, // Ms before flushing batch (default: 0.1)
+	maxMessagesInFlight: 100, // Max batches being processed (default: 100)
+	autoEnd: true, // Auto-close on process exit (default: true)
+	flushOnBeforeExit: true // Flush before exit (default: true)
 });
 ```
 
