@@ -5,9 +5,9 @@
     "": {
       "name": "@nowarajs/logger",
       "devDependencies": {
-        "@nowarajs/error": "^1.4.1",
-        "@nowarajs/typed-event-emitter": "^1.1.27",
-        "@types/bun": "^1.3.6",
+        "@nowarajs/error": "^1.4.3",
+        "@nowarajs/typed-event-emitter": "^1.1.28",
+        "@types/bun": "^1.3.7",
         "mitata": "^1.0.34",
         "oxfmt": "^0.27.0",
         "oxlint": "^1.42.0",
@@ -16,15 +16,15 @@
         "typescript": "^5.9.3",
       },
       "peerDependencies": {
-        "@nowarajs/error": "^1.4.1",
-        "@nowarajs/typed-event-emitter": "^1.1.27",
+        "@nowarajs/error": "^1.4.3",
+        "@nowarajs/typed-event-emitter": "^1.1.28",
       },
     },
   },
   "packages": {
-    "@nowarajs/error": ["@nowarajs/error@1.4.1", "", {}, "sha512-NRkn7tlL1i9u89TAY3n8TL7ujS9M3LvgYj87zuajaIlCesC4QmKXBDvVKwg6YZanS2JhETNk5QUfwhbGLQiNkw=="],
+    "@nowarajs/error": ["@nowarajs/error@1.4.3", "", {}, "sha512-KLtMLg8iT8Mf/brmQMGu7BCF12305G0vL2VB76oAsIQDR7URS52Kn+sgQOC9t4dsC34Zu8OZXDT9V7HWLKxNqw=="],
 
-    "@nowarajs/typed-event-emitter": ["@nowarajs/typed-event-emitter@1.1.27", "", {}, "sha512-tqcEcmC3V481POzEKVB7j/f7EDhDyt8uLF6fiCVw1ZK4CU31sbqLEaaJaVQaJLkvEVlOoGL7iHvFxpgjM7KGYA=="],
+    "@nowarajs/typed-event-emitter": ["@nowarajs/typed-event-emitter@1.1.28", "", {}, "sha512-d8cLn1c8KcM9oii1deIcoaS17ZLR2b3abcju7y9XQMO1MvS3lVwj7PBIuYm8qCkFbduUn00y2zDyPmPMNG5SKg=="],
 
     "@oxfmt/darwin-arm64": ["@oxfmt/darwin-arm64@0.27.0", "", { "os": "darwin", "cpu": "arm64" }, "sha512-3vwqyzNlVTVFVzHMlrqxb4tgVgHp6FYS0uIxsIZ/SeEDG0azaqiOw/2t8LlJ9f72PKRLWSey+Ak99tiKgpbsnQ=="],
 
