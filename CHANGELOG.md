@@ -1,4 +1,21 @@
 
+## v1.3.2
+
+[compare changes](https://github.com/NowaraJS/logger/compare/v1.3.1...v1.3.2)
+
+### 📦 Build
+
+- **📦:** [update dependencies] ([3740443](https://github.com/NowaraJS/logger/commit/3740443))
+
+### 🎨 Styles
+
+- **🎨:** [migrate from ESLint to oxlint and oxfmt] ([0239aca](https://github.com/NowaraJS/logger/commit/0239aca))
+- **🎨:** [Apply new lint and fmt] ([1025dc6](https://github.com/NowaraJS/logger/commit/1025dc6))
+
+### ❤️ Contributors
+
+- Komiriko <komiriko@pm.me>
+
 ## v1.3.1
 
 [compare changes](https://github.com/NowaraJS/logger/compare/v1.3.0...v1.3.1)
